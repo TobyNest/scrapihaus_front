@@ -5,7 +5,8 @@ export default {
     extend: {
       colors: {
         cinzaEscuro: '#303030',
-        cinzaClaro: '#F2F2F2'
+        cinzaClaro: '#F2F2F2',
+        cinzaBordas: '#EAEAEA'
       }
     }
   },
