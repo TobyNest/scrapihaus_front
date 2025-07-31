@@ -8,8 +8,8 @@ export default function NumberSelector({
   selectedNumber: number
 }) {
   return (
-    <>
-      <div className="mb-4 mt-8 h-8 w-full text-xl font-bold text-cinzaEscuro">
+    <div>
+      <div className="h-8 w-full text-xl font-bold text-cinzaEscuro">
         {title}
       </div>
       <div className="flex w-full flex-row items-center justify-between gap-1">
@@ -39,7 +39,7 @@ export default function NumberSelector({
           selectedNumber={selectedNumber}
         />
       </div>
-    </>
+    </div>
   )
 }
 

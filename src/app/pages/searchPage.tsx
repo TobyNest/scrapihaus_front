@@ -32,21 +32,21 @@ export function SearchPage() {
   }
 
   return (
-    <main className="flex h-screen w-full flex-col items-center justify-center gap-12 bg-white">
-      <div className="flex h-full w-full flex-col items-center justify-center gap-16">
+    <main className="flex h-screen w-full flex-col items-center justify-center  bg-white">
+      <div className="flex h-full w-full flex-col items-center justify-center gap-8">
         <TypeSelector
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
         />
 
         {/* box-shadow: offset-x offset-y blur spread color */}
-        <div className="h-3/4 w-[40%] rounded-md p-8 shadow-[0_0_30px_0_rgba(0,0,0,0.2)]">
+        <div className="h-4/5 w-[45%] rounded-md p-8 shadow-[0_0_30px_0_rgba(0,0,0,0.2)]">
           <BairroSelector />
 
           <AreaSelector valores={valores} handleChange={handleChange} />
           <div className="mt-8" />
           <div className="flex flex-row items-center justify-between gap-2">
-            <div className="flex w-[45%] flex-col">
+            <div className="flex w-[45%] flex-col gap-4">
               <NumberSelector
                 title={'Quartos'}
                 setNumber={setRoomNumber}
@@ -67,7 +67,7 @@ export function SearchPage() {
             </div>
             <div className="h-max w-[45%] bg-black">ads</div>
           </div>
-          <div className="w-600 mt-12 flex items-center justify-center">
+          <div className="w-600 flex items-center justify-center">
             <div
               onClick={() => navigate('/result')}
               className="group mt-8 flex h-14 w-60 cursor-pointer items-center justify-center rounded-2xl bg-black text-xl font-bold text-white transition-all duration-150 ease-in-out"
