@@ -12,7 +12,7 @@ export default function HousingTable( {housings}: HousingListProps) {
     return <div className="w-full h-full rounded-t-xl">
         <div className="w-full h-10 flex flex-row justify-between rounded-t-xl overflow-hidden">
             {TableInfoTitle.map((title) => (
-                <div className={`h-full flex-[${title.flex}] flex justify-start items-center border-r-0 last:border-r  bg-gray-200 border border-gray-100 overflow-hidden`}>
+                <div className={`h-full flex-[${title.flex}] flex justify-start items-center border-r-0 last:border-r  bg-white font-semibold border border-gray-100 overflow-hidden`}>
                     <div className="w-full h-full flex justify-start items-center pl-2 ">
                     {title.titulo}
 
@@ -46,9 +46,9 @@ export function HousingRow({housing, index}: {housing: Housing, index: number}) 
 
 export function HousingRowCell({value, flex, index, prefix, link}: {value:any, flex:number, index:number, prefix?: string, link?: string}) {
 
-    return <div className={`${index % 2 !== 0 ? "bg-gray-100" : "bg-white"} flex-[${flex}] flex justify-center items-center border border-t-0 border-r-0 last-of-type:border-r border-gray-200 first-of-type:border-r-0 overflow-hidden`}>
+    return <div className={`${index % 2 !== 0 ? "bg-white" : "bg-cinzaClaro"} flex-[${flex}] flex justify-center items-center border border-t-0 border-r-0 last-of-type:border-r border-gray-200 first-of-type:border-r-0 overflow-hidden`}>
         <div onClick={() => {if (link) window.open(link, "_black")}} className={`${link && "hover:font-semibold hover:cursor-pointer group "} w-full h-full flex justify-start items-center pl-2`}>
-            {prefix} {value}
+            {value == 0 ? "" : prefix} {value == 0 ? "-" : value}
             {link && <div  className="w-full h-full p-2 opacity-0 group-hover:opacity-100 transition-all duration-200 ease-in-out translate-x-[20px] group-hover:translate-x-0"><FontAwesomeIcon icon={faSquareArrowUpRight} /></div>}
         </div>
     </div>
