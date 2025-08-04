@@ -6,7 +6,7 @@ export default function TypeSelector({
   setSelectedOption: (value: number) => void
 }) {
   return (
-    <div className="relative flex h-14 w-1/3 flex-row rounded-full bg-cinzaClaro">
+    <div className="relative flex h-12 w-full flex-row rounded-sm border border-cinzaBordas bg-cinzaClaro">
       <div
         onClick={() => setSelectedOption(0)}
         className={`z-10 flex h-full w-1/3 items-center justify-center bg-transparent text-xl ${selectedOption == 0 ? 'text-white' : 'text-cinzaEscuro'} cursor-pointer select-none rounded-l-full transition-all duration-150 ease-in-out`}
@@ -26,7 +26,7 @@ export default function TypeSelector({
         Terreno/Lote
       </div>
       <div
-        className={`pointer-events: none absolute h-full w-1/3 rounded-full bg-cinzaEscuro ${selectedOption == 0 ? 'left-0' : selectedOption == 1 ? 'left-1/3' : 'left-2/3'} transition-all duration-150 ease-in-out`}
+        className={`pointer-events: none absolute h-full w-1/3 rounded-sm bg-cinzaEscuro ${selectedOption == 0 ? 'left-0' : selectedOption == 1 ? 'left-1/3' : 'left-2/3'} transition-all duration-150 ease-in-out`}
       ></div>
     </div>
   )

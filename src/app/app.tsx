@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { SearchPage } from './pages/searchPage'
 import ResultPage from './pages/resultPage'
 import { SearchProvider } from './contexts/searchContext'
-import NewSearchPage from './pages/newSearchPage'
+import NewSearchPage from './pages/searchPage'
 
 export function App() {
   return (
