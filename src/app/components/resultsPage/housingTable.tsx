@@ -28,7 +28,7 @@ export default function HousingTable({ housings }: HousingListProps) {
         {TableInfoTitle.map((title) => (
           <div
             style={{ flex: title.flex }}
-            className={`h-full  flex items-center justify-start overflow-hidden border border-r-0 border-gray-100 bg-white font-semibold last:border-r`}
+            className={`flex h-full items-center justify-start overflow-hidden border border-r-0 border-gray-100 bg-white font-semibold last:border-r`}
           >
             <div className="flex h-full w-full items-center justify-start pl-2">
               {title.titulo}
@@ -55,49 +55,49 @@ export function HousingRow({
   return (
     <div className="flex h-10 w-full flex-row justify-between">
       <HousingRowCell
-        value={housing.data}
+        value={housing.data_coleta}
         flex={TableInfoTitle[0].flex}
         index={index}
       />
       <HousingRowCell
-        value={housing.area}
+        value={housing.area_privativa}
         flex={TableInfoTitle[1].flex}
         index={index}
         suffix="m²"
       />
       <HousingRowCell
-        value={housing.type}
+        value={housing.tipo}
         flex={TableInfoTitle[2].flex}
         index={index}
       />
       <HousingRowCell
-        value={housing.address}
+        value={housing.endereco}
         flex={TableInfoTitle[3].flex}
         index={index}
       />
       <HousingRowCell
-        value={housing.rooms}
+        value={housing.quartos}
         flex={TableInfoTitle[4].flex}
         index={index}
       />
       <HousingRowCell
-        value={housing.bathrooms}
+        value={housing.banheiros}
         flex={TableInfoTitle[5].flex}
         index={index}
       />
       <HousingRowCell
-        value={housing.parkingSlots}
+        value={housing.vagas_garagem}
         flex={TableInfoTitle[6].flex}
         index={index}
       />
       <HousingRowCell
-        value={housing.price}
+        value={housing.valor_total}
         flex={TableInfoTitle[7].flex}
         index={index}
         prefix="R$"
       />
       <HousingRowCell
-        value={housing.price_m2}
+        value={housing.valor_m2}
         flex={TableInfoTitle[8].flex}
         index={index}
         prefix="R$"
@@ -109,7 +109,7 @@ export function HousingRow({
         prefix="R$"
       />
       <HousingRowCell
-        value={housing.condominum}
+        value={housing.condominio}
         flex={TableInfoTitle[10].flex}
         index={index}
         prefix="R$"
@@ -142,13 +142,13 @@ export function HousingRowCell({
   return (
     <div
       style={{ flex }}
-      className={`${index % 2 !== 0 ? 'bg-white' : 'bg-cinzaClaro'} flex items-center justify-center overflow-hidden border border-r-0 border-t-0 border-gray-200 first-of-type:border-r-0 last-of-type:border-r`}
+      className={`${index % 2 !== 0 ? 'bg-white' : 'bg-cinzaClaro'} flex items-center justify-start overflow-hidden border border-r-0 border-t-0 border-gray-200 first-of-type:border-r-0 last-of-type:border-r`}
     >
       <div
         onClick={() => {
           if (link) window.open(link, '_blank')
         }}
-        className={`${link && 'group hover:cursor-pointer hover:font-semibold'} flex h-full w-max items-center justify-start pl-2`}
+        className={`${link && 'group hover:cursor-pointer hover:font-semibold'} flex h-full items-center pl-2`}
       >
         {value == 0 ? '' : prefix} {value == 0 ? '-' : value}{' '}
         {value == 0 ? '' : suffix}

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import TypeSelector from '../components/searchPage/typeSelector'
 import BairroSelector from '../components/searchPage/bairroSelector'
 import AreaSelector from '../components/searchPage/areaSelector'
@@ -6,14 +5,32 @@ import NumberSelector from '../components/searchPage/numberSelector'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { useNavigate } from 'react-router-dom'
+import { useSearch } from '../contexts/searchContext'
+import { useState } from 'react'
+import { SearchParams } from '../types/searchParams'
 
 export function SearchPage() {
-  const [selectedOption, setSelectedOption] = useState(0)
-  const [roomNumber, setRoomNumber] = useState(1)
-  const [bathroomNumber, setBathroomNumber] = useState(1)
-  const [parkingSlotsNumber, setParkingSlotsNumber] = useState(1)
-
   const navigate = useNavigate()
+  const [selectedOption, setSelectedOption] = useState<number>(0)
+
+  const handleTypeChange = (index: number) => {
+    const typeOptions = ['Casa', 'Apartamento', 'Terreno/Lote']
+    const selectedType = typeOptions[index]
+
+    if (!selectedType) return // segurança para índice inválido
+
+    setSelectedOption(index)
+    setSearchParams((prev) => ({
+      ...prev,  
+      tipo: selectedType
+    }))
+  }
+
+  const [searchParams, setSearchParams] = useState<SearchParams>({
+    tipo: 'Casa' // obrigatório
+  })
+
+  const { buscarHousings, loading } = useSearch()
 
   const [valores, setValores] = useState({
     tamanhoMin: '',
@@ -31,12 +48,30 @@ export function SearchPage() {
     }))
   }
 
+  const updateField = <K extends keyof SearchParams>(
+    key: K,
+    value: SearchParams[K]
+  ) => {
+    setSearchParams((prev) => ({
+      ...prev,
+      [key]: value
+    }))
+  }
+
+  const handleSearch = async () => {
+    await buscarHousings(searchParams)
+
+    if (!loading) {
+      navigate('/result')
+    }
+  }
+
   return (
-    <main className="flex h-screen w-full flex-col items-center justify-center  bg-white">
+    <main className="flex h-screen w-full flex-col items-center justify-center bg-white">
       <div className="flex h-full w-full flex-col items-center justify-center gap-8">
         <TypeSelector
           selectedOption={selectedOption}
-          setSelectedOption={setSelectedOption}
+          setSelectedOption={handleTypeChange}
         />
 
         {/* box-shadow: offset-x offset-y blur spread color */}
@@ -49,27 +84,27 @@ export function SearchPage() {
             <div className="flex w-[45%] flex-col gap-4">
               <NumberSelector
                 title={'Quartos'}
-                setNumber={setRoomNumber}
-                selectedNumber={roomNumber}
+                setNumber={updateField.bind(null, 'quartos')}
+                selectedNumber={searchParams.quartos || 0}
               />
 
               <NumberSelector
                 title={'Banheiros'}
-                setNumber={setBathroomNumber}
-                selectedNumber={bathroomNumber}
+                setNumber={updateField.bind(null, 'banheiros')}
+                selectedNumber={searchParams.banheiros || 0}
               />
 
               <NumberSelector
                 title={'Vagas de Garagem'}
-                setNumber={setParkingSlotsNumber}
-                selectedNumber={parkingSlotsNumber}
+                setNumber={updateField.bind(null, 'vagas_garagem')}
+                selectedNumber={searchParams.vagas_garagem || 0}
               />
             </div>
             <div className="h-max w-[45%] bg-black">ads</div>
           </div>
           <div className="w-600 flex items-center justify-center">
             <div
-              onClick={() => navigate('/result')}
+              onClick={handleSearch}
               className="group mt-8 flex h-14 w-60 cursor-pointer items-center justify-center rounded-2xl bg-black text-xl font-bold text-white transition-all duration-150 ease-in-out"
             >
               <div>Pesquisar</div>
