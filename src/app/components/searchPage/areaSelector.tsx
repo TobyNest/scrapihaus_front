@@ -20,14 +20,21 @@ export default function areaSelector({
           <div className="flex h-10 w-14 items-center justify-center rounded-md bg-cinzaEscuro text-xl text-white">
             Mín
           </div>
-          <input
-            name="tamanhoMin"
-            className="h-10 w-1/2 bg-transparent px-4 outline-none"
-            type="text"
-            onChange={handleChange}
-            value={valores.tamanhoMin}
-          ></input>
-          <div className="flex w-1/4 items-center justify-center text-xl text-cinzaEscuro">
+          <div>
+            <label htmlFor="tamanhoMin" className="sr-only">
+              Área
+            </label>
+            <input
+              placeholder="Área mínima"
+              id="tamanhoMin"
+              name="tamanhoMin"
+              className="h-10 w-full bg-transparent px-4 outline-none"
+              type="text"
+              onChange={handleChange}
+              value={valores.tamanhoMin}
+            ></input>
+          </div>
+          <div className="flex w-10 items-center justify-center text-xl text-cinzaEscuro">
             m²
           </div>
         </div>
@@ -36,15 +43,16 @@ export default function areaSelector({
             Máx
           </div>
           <input
+            placeholder="Área máxima"
             name="tamanhoMax"
-            className="h-10 w-1/2 bg-transparent px-4 outline-none"
+            className="h-10 w-full bg-transparent px-4 outline-none"
             type="text"
             pattern="[0-9]*"
             inputMode="numeric"
             onChange={handleChange}
             value={valores.tamanhoMax}
           ></input>
-          <div className="flex w-1/4 items-center justify-center text-xl text-cinzaEscuro">
+          <div className="flex w-10 items-center justify-center px-8 text-xl text-cinzaEscuro">
             m²
           </div>
         </div>
