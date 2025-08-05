@@ -3,6 +3,8 @@ import { createContext, useContext, useState } from 'react'
 import { Housing } from '../types/housing'
 import { SearchParams } from '../types/searchParams'
 
+const apiUrl = import.meta.env.VITE_API_URL
+
 type SearchController = {
   housings: Housing[]
   loading: boolean
@@ -31,12 +33,9 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
 
       const query = new URLSearchParams(filteredParams).toString()
 
-      const response = await fetch(
-        `https://scrapihaus-back-254197666529.southamerica-east1.run.app/housings/?${query}`,
-        {
-          method: 'GET'
-        }
-      )
+      const response = await fetch(`${apiUrl}?${query}`, {
+        method: 'GET'
+      })
 
       if (!response.ok) throw new Error('Erro ao realizar pesquisa')
 
