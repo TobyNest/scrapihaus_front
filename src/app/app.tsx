@@ -6,7 +6,7 @@ import SearchPage from './pages/searchPage'
 export function App() {
   return (
     <>
-      <Router>
+      <Router basename="/scrapihaus_front/">
         <SearchProvider>
           <Routes>
             <Route path="/" element={<SearchPage />} />
