@@ -2,8 +2,7 @@
 import { createContext, useContext, useState } from 'react'
 import { Housing } from '../types/housing'
 import { SearchParams } from '../types/searchParams'
-
-const apiUrl = import.meta.env.VITE_API_URL
+import { environments } from '@/utils/env/enviroments'
 
 type SearchController = {
   housings: Housing[]
@@ -33,7 +32,7 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
 
       const query = new URLSearchParams(filteredParams).toString()
 
-      const response = await fetch(`${apiUrl}?${query}`, {
+      const response = await fetch(`${environments.backendUrl}?${query}`, {
         method: 'GET'
       })
 
