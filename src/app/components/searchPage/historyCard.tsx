@@ -1,5 +1,5 @@
 import { History } from "@/app/types/history"
-import { faAngleDown, faBed, faCar, faShower } from "@fortawesome/free-solid-svg-icons"
+import { faBed, faCar, faShower } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useState } from "react"
 
