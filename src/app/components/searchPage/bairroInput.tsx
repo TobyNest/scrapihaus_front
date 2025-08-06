@@ -2,8 +2,13 @@
 import { useState, useEffect } from 'react'
 import { bairrosSP } from '@/utils/listaBairros/listaBairrosSp'
 
-export default function BairroInput() {
-  const [input, setInput] = useState('')
+export default function BairroInput({
+  setInput,
+  input
+}: {
+  setInput: (bairro: string) => void
+  input: string
+}) {
   const [sugestoes, setSugestoes] = useState<string[]>([])
   const [mostrarSugestoes, setMostrarSugestoes] = useState(false)
   const [selecionado, setSelecionado] = useState(0)

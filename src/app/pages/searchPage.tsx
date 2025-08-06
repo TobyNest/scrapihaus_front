@@ -59,7 +59,10 @@ export default function newSearchPage() {
         </div>
 
         <div className="fit flex h-fit min-h-20 min-w-[700px] flex-row rounded-sm bg-white px-8 py-6 shadow-[0_0_30px_0_rgba(0,0,0,0.2)]">
-          <BairroInput />
+          <BairroInput
+            setInput={updateField.bind(null, 'bairro')}
+            input={searchParams.bairro || ''}
+          />
           <div className="flex min-w-[200px] flex-col border-l-2 pl-8">
             <label htmlFor="area-minima">
               <h1 className="text-md text-gray-500">ÁREA MÍNIMA:</h1>
