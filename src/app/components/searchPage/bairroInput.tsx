@@ -61,7 +61,7 @@ export default function BairroInput({
       />
 
       {mostrarSugestoes && sugestoes.length > 0 && (
-        <ul className="absolute z-10 mt-1 max-h-60 w-2/3 overflow-auto rounded-sm bg-white shadow-md">
+        <ul className="absolute z-20 mt-1 max-h-60 w-2/3 overflow-auto rounded-sm bg-white shadow-md">
           {sugestoes.map((bairro, index) => (
             <li
               key={bairro}
