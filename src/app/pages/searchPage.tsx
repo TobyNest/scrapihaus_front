@@ -76,7 +76,7 @@ export default function newSearchPage() {
           <div className='flex flex-row text-3xl'>
             <h1 className='text-3xl text-cinzaEscuro'>Bom dia, </h1>
             <div className='flex flex-row group'>
-              <div className='bg-cinzaEscuro text-white px-2 ml-1 rounded-md hover:scale-105 cursor-pointer'>Breno</div> 
+              <div onClick={() => navigate("/login")} className='bg-cinzaEscuro text-white px-2 ml-1 rounded-md hover:scale-105 cursor-pointer'>Breno</div> 
               <div className='group-hover:animate-wave inline-block origin-bottom'>👋</div>
             </div>
 
