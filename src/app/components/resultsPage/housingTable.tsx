@@ -8,6 +8,7 @@ interface HousingListProps {
 }
 
 const TableInfoTitle = [
+  { titulo: 'Nº', flex: 1 },
   { titulo: 'Data de coleta', flex: 4 },
   { titulo: 'Área Privativa', flex: 3 },
   { titulo: 'Tipo', flex: 3 },
@@ -57,80 +58,86 @@ export function HousingRow({
   return (
     <div className="flex h-10 w-full flex-row justify-between">
       <HousingRowCell
-        value={housing.data_coleta}
+        value={index + 1}
         flex={TableInfoTitle[0].flex}
+        index={index}
+        cell={CellType.NUMEROS}
+      />
+      <HousingRowCell
+        value={housing.data_coleta}
+        flex={TableInfoTitle[1].flex}
         index={index}
         cell={CellType.DATA}
       />
       <HousingRowCell
         value={housing.area_privativa}
-        flex={TableInfoTitle[1].flex}
+        flex={TableInfoTitle[2].flex}
         index={index}
         cell={CellType.METRO_QUADRADO}
       />
       <HousingRowCell
         value={housing.tipo}
-        flex={TableInfoTitle[2].flex}
-        index={index}
-        cell={CellType.TEXTO}
-      />
-      <HousingRowCell
-        value={housing.bairro}
         flex={TableInfoTitle[3].flex}
         index={index}
         cell={CellType.TEXTO}
       />
       <HousingRowCell
-        value={housing.endereco}
+        value={housing.bairro}
         flex={TableInfoTitle[4].flex}
         index={index}
         cell={CellType.TEXTO}
       />
       <HousingRowCell
-        value={housing.quartos}
+        value={housing.endereco}
         flex={TableInfoTitle[5].flex}
         index={index}
-        cell={CellType.NUMEROS}
+        cell={CellType.TEXTO}
       />
       <HousingRowCell
-        value={housing.banheiros}
+        value={housing.quartos}
         flex={TableInfoTitle[6].flex}
         index={index}
         cell={CellType.NUMEROS}
       />
       <HousingRowCell
-        value={housing.vagas_garagem}
+        value={housing.banheiros}
         flex={TableInfoTitle[7].flex}
         index={index}
         cell={CellType.NUMEROS}
       />
       <HousingRowCell
-        value={housing.valor_total}
+        value={housing.vagas_garagem}
         flex={TableInfoTitle[8].flex}
         index={index}
-        cell={CellType.DINHEIRO}
+        cell={CellType.NUMEROS}
       />
       <HousingRowCell
-        value={housing.valor_m2}
+        value={housing.valor_total}
         flex={TableInfoTitle[9].flex}
         index={index}
         cell={CellType.DINHEIRO}
       />
       <HousingRowCell
-        value={housing.iptu}
+        value={housing.valor_m2}
         flex={TableInfoTitle[10].flex}
         index={index}
         cell={CellType.DINHEIRO}
       />
       <HousingRowCell
-        value={housing.condominio}
+        value={housing.iptu}
         flex={TableInfoTitle[11].flex}
         index={index}
         cell={CellType.DINHEIRO}
       />
       <HousingRowCell
-        value={'Acessar'}
+        value={housing.condominio}
         flex={TableInfoTitle[12].flex}
+        index={index}
+        cell={CellType.DINHEIRO}
+      />
+      <HousingRowCell
+        value={'Acessar'}
+        flex={TableInfoTitle[13].flex}
         index={index}
         link={housing.link}
         cell={CellType.LINK}

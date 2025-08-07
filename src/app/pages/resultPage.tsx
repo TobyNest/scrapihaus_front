@@ -11,10 +11,13 @@ export default function ResultPage() {
   return (
     <div className="flex h-screen w-screen items-center justify-center bg-cinzaClaro">
       <div className="h-4/5 w-[90%] overflow-hidden rounded-md p-4 shadow-[0_0_30px_0_rgba(0,0,0,0.2)]">
-        <div className="flex h-[10%] w-full flex-row items-center justify-center">
+        <div className="flex h-[10%] w-full flex-row items-center justify-evenly gap-2">
+          <div className="e w-100 flex h-12 items-center justify-center rounded-md">
+            {housings.length} Imóveis encontrados
+          </div>
           <div
             onClick={() => exportToExcel(housings)}
-            className="flex h-12 w-40 cursor-pointer select-none items-center justify-center rounded-md bg-cinzaEscuro text-white hover:brightness-90"
+            className="flex h-12 w-60 cursor-pointer select-none items-center justify-center rounded-md bg-cinzaEscuro text-white hover:brightness-90"
           >
             Baixar Excel
           </div>
