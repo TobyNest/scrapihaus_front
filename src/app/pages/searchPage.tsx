@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass'
 import TypeSelector from '../components/searchPage/typeSelector'
 import BairroInput from '../components/searchPage/bairroInput'
-import { faAngleRight} from '@fortawesome/free-solid-svg-icons'
+import { faAngleRight } from '@fortawesome/free-solid-svg-icons'
 import { historyMock } from '@/mocks/historyMock'
 import HistoryCard from '../components/searchPage/historyCard'
 
@@ -52,36 +52,40 @@ export default function newSearchPage() {
   }
 
   return (
-    <div className="flex h-screen  w-screen items-center justify-center bg-white font-fredoka relative">
-      <div className='w-[15%] bg-cinzaClaro h-screen absolute left-0 flex flex-col gap-2 px-2 '>
-          <div className='w-full h-max border-b mt-16'>
-              Histórico de Pesquisas
+    <div className="relative flex h-screen w-screen items-center justify-center bg-white font-fredoka">
+      <div className="absolute left-0 flex h-screen w-[15%] flex-col gap-2 bg-cinzaClaro px-2">
+        <div className="mt-16 h-max w-full border-b">
+          Histórico de Pesquisas
+        </div>
+        <div className="hide-scrollbar flex h-full flex-col overflow-y-scroll">
+          <div className="h-full">
+            {historyMock.map((history) => (
+              <HistoryCard item={history} />
+            ))}
           </div>
-          <div className='flex flex-col h-full overflow-y-scroll hide-scrollbar'>
-            <div className='h-full'>
-              {historyMock.map((history) => 
-                  <HistoryCard item={history} />
-                
-              )}
+        </div>
+      </div>
+      <div className="absolute right-0 top-0 flex h-12 w-[85%] flex-row items-center justify-start gap-2 rounded-t-xl border-b-2 border-b-cinzaBordas pl-4">
+        <h1 className="">Scrapihaus</h1>
+        <FontAwesomeIcon icon={faAngleRight} />
+        <h1 className="text-gray-400">Busca de Imóveis</h1>
+      </div>
+      <div className="absolute mt-12 flex flex-col gap-4 sm:right-[10%] md:right-[18%]">
+        <div className="mb-12 flex h-20 w-full flex-col items-center justify-center">
+          <div className="flex flex-row text-3xl">
+            <h1 className="text-3xl text-cinzaEscuro">Bom dia, </h1>
+            <div className="group flex flex-row">
+              <div className="ml-1 cursor-pointer rounded-md bg-cinzaEscuro px-2 text-white hover:scale-105">
+                Breno
+              </div>
+              <div className="inline-block origin-bottom group-hover:animate-wave">
+                👋
+              </div>
             </div>
           </div>
-      </div>
-      <div className='w-[85%] absolute h-12 border-b-2 border-b-cinzaBordas pl-4 rounded-t-xl top-0 right-0 flex flex-row gap-2 justify-start items-center'>
-          <h1 className=''>Scrapihaus</h1>
-          <FontAwesomeIcon icon={faAngleRight} />
-          <h1 className='text-gray-400'>Busca de Imóveis</h1>
-      </div>
-      <div className="flex flex-col gap-4 mt-12 absolute md:right-[18%] sm:right-[10%]">
-        <div className='w-full h-20  mb-12 flex justify-center items-center flex-col'>
-          <div className='flex flex-row text-3xl'>
-            <h1 className='text-3xl text-cinzaEscuro'>Bom dia, </h1>
-            <div className='flex flex-row group'>
-              <div className='bg-cinzaEscuro text-white px-2 ml-1 rounded-md hover:scale-105 cursor-pointer'>Breno</div> 
-              <div className='group-hover:animate-wave inline-block origin-bottom'>👋</div>
-            </div>
-
-          </div>
-            <p className='w-1/3 text-gray-400 text-sm mt-2 text-center'>Selecione os parâmetros necessários para sua pesquisa</p>
+          <p className="mt-2 w-1/3 text-center text-sm text-gray-400">
+            Selecione os parâmetros necessários para sua pesquisa
+          </p>
         </div>
         <div className="fit flex h-fit min-h-20 min-w-[700px] flex-row rounded-sm bg-white px-8 py-6 shadow-[0_0_30px_0_rgba(0,0,0,0.2)]">
           <BairroInput
