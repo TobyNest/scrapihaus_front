@@ -16,7 +16,7 @@ export default function LoginPage() {
   async function handleSubmit() {
     try {
       await login(email, password)
-      navigate('/')
+      navigate('/search')
     } catch {
       alert('Erro ao fazer login')
     }
@@ -42,7 +42,7 @@ export default function LoginPage() {
 export function LoginTitle() {
   return (
     <div
-      className={`shadow-sombraPadrao z-10 flex h-full w-full flex-col items-center rounded-sm bg-white px-8 py-6 font-fredoka`}
+      className={`z-10 flex h-full w-full flex-col items-center rounded-sm bg-white px-8 py-6 font-fredoka shadow-sombraPadrao`}
     >
       <div className="flex h-max w-full flex-col items-start justify-center text-cinzaEscuro">
         <h1 className="text-3xl">Login</h1>
@@ -69,7 +69,7 @@ export function LoginForm({
 }: LoginFormProps) {
   return (
     <div
-      className={`shadow-sombraPadrao z-10 flex h-full w-full flex-col items-center rounded-sm bg-white p-8 font-fredoka`}
+      className={`z-10 flex h-full w-full flex-col items-center rounded-sm bg-white p-8 font-fredoka shadow-sombraPadrao`}
     >
       <form className="h-max w-full">
         <label htmlFor="email">
@@ -109,7 +109,7 @@ export function LoginButtons({
     <div className="h-15 z-10 flex w-full flex-row gap-8">
       <div
         onClick={() => navigate('/register')}
-        className="shadow-sombraPadrao group flex min-h-12 w-60 cursor-pointer items-center justify-center rounded-sm border-cinzaBordas bg-white text-xl text-cinzaEscuro transition-all duration-150 ease-in-out"
+        className="group flex min-h-12 w-60 cursor-pointer items-center justify-center rounded-sm border-cinzaBordas bg-white text-xl text-cinzaEscuro shadow-sombraPadrao transition-all duration-150 ease-in-out"
       >
         <div>Não tenho conta</div>
         <div className="text-cinzEscuro ml-2 h-6 w-0 translate-x-[20px] text-white opacity-0 transition-all duration-300 ease-in-out group-hover:w-6 group-hover:translate-x-0 group-hover:opacity-100">

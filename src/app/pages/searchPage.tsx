@@ -10,11 +10,13 @@ import BairroInput from '../components/searchPage/bairroInput'
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons'
 import { historyMock } from '@/mocks/historyMock'
 import HistoryCard from '../components/searchPage/historyCard'
+import { useAuth } from '../contexts/authContext'
 
 export default function newSearchPage() {
   const navigate = useNavigate()
   const [selectedOption, setSelectedOption] = useState<number>(0)
   const { buscarHousings, loading } = useSearch()
+  const { user } = useAuth()
 
   const handleTypeChange = (index: number) => {
     const typeOptions = ['Casa', 'Apartamento', 'Terreno/Lote']
@@ -47,7 +49,7 @@ export default function newSearchPage() {
     await buscarHousings(searchParams)
 
     if (!loading) {
-      navigate('/result')
+      navigate('/search/result')
     }
   }
 
@@ -80,7 +82,7 @@ export default function newSearchPage() {
                 onClick={() => navigate('/login')}
                 className="ml-1 cursor-pointer rounded-md bg-cinzaEscuro px-2 text-white hover:scale-105"
               >
-                Breno
+                {user?.full_name}
               </div>
               <div className="inline-block origin-bottom group-hover:animate-wave">
                 👋

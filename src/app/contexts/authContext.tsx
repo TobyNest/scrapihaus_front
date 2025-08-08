@@ -2,6 +2,7 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import { User } from '../types/user'
 import { environments } from '@/utils/env/enviroments'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 
 type AuthContextType = {
   user: User | null
@@ -20,15 +21,55 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
+  const location = useLocation()
 
-  // Carregar usuário do localStorage no início
   useEffect(() => {
-    const storedUser = localStorage.getItem('user')
-    if (storedUser) {
-      setUser(JSON.parse(storedUser))
+    const publicRoutes = ['/login', '/register']
+
+    if (publicRoutes.includes(location.pathname)) {
+      return
+    } else {
+      navigate('/login')
+      return
     }
-    setLoading(false)
+
+    async function validateUser() {
+      const storedUser = localStorage.getItem('user')
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser)
+        setUser(parsedUser)
+
+        try {
+          await me(parsedUser.access_token)
+        } catch (error) {
+          // Token inválido, remove e limpa usuário
+          localStorage.removeItem('user')
+          setUser(null)
+        }
+      }
+      setLoading(false)
+    }
+
+    validateUser()
   }, [])
+
+  async function me(access_token: string) {
+    const meRes = await fetch(`${environments.backendUrl}/auth/me`, {
+      headers: { Authorization: `Bearer ${access_token}` }
+    })
+
+    const meData = await meRes.json()
+
+    const newUser: User = {
+      full_name: meData.full_name,
+      email: meData.email,
+      access_token: access_token
+    }
+
+    setUser(newUser)
+    localStorage.setItem('user', JSON.stringify(newUser))
+  }
 
   // Função de login
   async function login(email: string, password: string) {
@@ -42,19 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const data = await res.json()
 
-    const meRes = await fetch(`${environments.backendUrl}/auth/me`, {
-      headers: { Authorization: `Bearer ${data.access_token}` }
-    })
-    const meData = await meRes.json()
-
-    const newUser: User = {
-      full_name: meData.full_name,
-      email: meData.email,
-      access_token: data.access_token
-    }
-
-    setUser(newUser)
-    localStorage.setItem('user', JSON.stringify(newUser))
+    me(data.access_token)
   }
 
   // Função de registro

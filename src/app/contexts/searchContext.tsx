@@ -39,9 +39,13 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
 
       const query = new URLSearchParams(filteredParams).toString()
 
-      const response = await fetch(`${environments.backendUrl}/housing/?${query}`, {
-        method: 'GET'
-      })
+      const response = await fetch(
+        `${environments.backendUrl}housings/?${query}`,
+        {
+          method: 'GET',
+          headers: { Authorization: `Bearer ${user?.access_token}` }
+        }
+      )
 
       if (!response.ok) throw new Error('Erro ao realizar pesquisa')
 
