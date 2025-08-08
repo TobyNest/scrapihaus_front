@@ -4,6 +4,7 @@ import { SearchProvider } from './contexts/searchContext'
 import SearchPage from './pages/searchPage'
 import { AuthProvider } from './contexts/authContext'
 import LoginPage from './pages/authentication/loginPage'
+import RegisterPage from './pages/authentication/registerPage'
 
 export function App() {
   return (
@@ -14,6 +15,7 @@ export function App() {
             <Routes>
               <Route path="/" element={<SearchPage />} />
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
               <Route path="/result" element={<ResultPage />} />
               <Route path="*" element={<h1>Not Found</h1>} />
             </Routes>

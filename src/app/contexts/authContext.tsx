@@ -42,7 +42,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const data = await res.json()
 
-    // Buscar dados do usuário
     const meRes = await fetch(`${environments.backendUrl}/auth/me`, {
       headers: { Authorization: `Bearer ${data.access_token}` }
     })
@@ -65,11 +64,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ full_name, email, password })
     })
-
     if (!res.ok) throw new Error('Registration failed')
 
-    // Já loga após registrar
-    await login(email, password)
+    const data = await res.json()
+
+    console.log(data.access_token)
+
+    login(email, password)
   }
 
   // Logout
