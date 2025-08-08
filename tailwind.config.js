@@ -5,6 +5,11 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      
+        boxShadow: {
+          sombraPadrao: '0 0 30px 0 rgba(0, 0, 0, 0.2)',
+        },
+
       colors: {
         cinzaEscuro: '#303030',
         cinzaClaro: '#F2F2F2',
