@@ -2,7 +2,7 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import { User } from '../types/user'
 import { environments } from '@/utils/env/enviroments'
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 type AuthContextType = {
   user: User | null

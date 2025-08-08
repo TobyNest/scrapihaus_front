@@ -138,17 +138,17 @@ export default function newSearchPage() {
         <div className="flex min-h-20 min-w-[700px] flex-row justify-between rounded-sm bg-white px-8 py-6 shadow-[0_0_30px_0_rgba(0,0,0,0.2)]">
           <SelectorNumbers
             setSelectedNumber={updateField.bind(null, 'quartos')}
-            selectedNumber={searchParams.quartos || 0}
+            selectedNumber={searchParams.quartos}
             title={'quartos'}
           />
           <SelectorNumbers
             setSelectedNumber={updateField.bind(null, 'banheiros')}
-            selectedNumber={searchParams.banheiros || 0}
+            selectedNumber={searchParams.banheiros}
             title={'banheiros'}
           />
           <SelectorNumbers
             setSelectedNumber={updateField.bind(null, 'vagas_garagem')}
-            selectedNumber={searchParams.vagas_garagem || 0}
+            selectedNumber={searchParams.vagas_garagem}
             title={'vagas de garagem'}
           />
         </div>
