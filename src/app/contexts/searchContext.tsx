@@ -3,20 +3,27 @@ import { createContext, useContext, useState } from 'react'
 import { Housing } from '../types/housing'
 import { SearchParams } from '../types/searchParams'
 import { environments } from '@/utils/env/enviroments'
+import { History } from '../types/history'
+import { useAuth } from './authContext' // para pegar o token do usuário logado
 
 type SearchController = {
   housings: Housing[]
+  searches: History[] // histórico do usuário
   loading: boolean
   error: string | null
   buscarHousings: (params: SearchParams) => Promise<void>
+  fetchMySearches: () => Promise<void>
 }
 
 const SearchContext = createContext<SearchController | undefined>(undefined)
 
 export function SearchProvider({ children }: { children: React.ReactNode }) {
   const [housings, setHousings] = useState<Housing[]>([])
+  const [searches, setSearches] = useState<History[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const { user } = useAuth()
 
   async function buscarHousings(params: SearchParams) {
     setLoading(true)
@@ -48,9 +55,40 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  async function fetchMySearches() {
+    if (!user) return // só busca se estiver logado
+
+    setLoading(true)
+    setError(null)
+
+    try {
+      const res = await fetch(`${environments.backendUrl}/my-searches`, {
+        method: 'GET',
+        headers: { Authorization: `Bearer ${user.access_token}` }
+      })
+
+      if (!res.ok) throw new Error('Erro ao buscar histórico')
+
+      const data: History[] = await res.json()
+      setSearches(data)
+    } catch (err: any) {
+      setError(err.message || 'Erro desconhecido')
+      setSearches([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <SearchContext.Provider
-      value={{ housings, loading, error, buscarHousings }}
+      value={{
+        housings,
+        searches,
+        loading,
+        error,
+        buscarHousings,
+        fetchMySearches
+      }}
     >
       {children}
     </SearchContext.Provider>

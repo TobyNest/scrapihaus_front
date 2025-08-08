@@ -1,116 +1,125 @@
-import { faArrowUpRightDots, faArrowUpRightFromSquare, faHouse, faMagnifyingGlass, faPlus, faUser } from '@fortawesome/free-solid-svg-icons';
-import { faArrowsUpDownLeftRight } from '@fortawesome/free-solid-svg-icons/faArrowsUpDownLeftRight';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState, useEffect } from 'react';
+import BackGroundAnimatedGrid from '@/app/components/authentication/loginPage/backgroundGrid'
+import { useAuth } from '@/app/contexts/authContext'
+import { faHouse, faUser } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useState } from 'react'
 
-const SquareGrid = () => {
-  const [columns, setColumns] = useState(0);
-  const [rows, setRows] = useState(0);
-  const [visibleSquares, setVisibleSquares] = useState(new Set());
+export default function LoginPage() {
+  // Auth
+  const { login } = useAuth()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
- // Tamanho do quadrado do fundo, utilizado para personalizar o fundo
-  const squareSize = 30;
-
-  const updateGridSize = () => {
-    const newColumns = Math.floor(window.innerWidth / squareSize) + 1;
-    const newRows = Math.floor(window.innerHeight / squareSize) + 1;
-    setColumns(newColumns);
-    setRows(newRows);
-  };
-
-  useEffect(() => {
-    updateGridSize();
-    window.addEventListener('resize', updateGridSize);
-    return () => window.removeEventListener('resize', updateGridSize);
-  }, []);
-
-  useEffect(() => {
-    const total = columns * rows;
-
-    const showInterval = setInterval(() => {
-      setVisibleSquares((prev) => {
-        const newSet = new Set(prev);
-        const randomIndex = Math.floor(Math.random() * total);
-        newSet.add(randomIndex);
-        return newSet;
-      });
-    }, 80); // quadrados aparecendo
-    const hideInterval = setInterval(() => {
-      setVisibleSquares((prev) => {
-        const newSet = new Set(prev);
-        const randomIndex = Math.floor(Math.random() * total);
-        newSet.delete(randomIndex);
-        return newSet;
-      });
-    }, 240); // quadrados sumindo
-
-    return () => {
-      clearInterval(showInterval);
-      clearInterval(hideInterval);
-    };
-  }, [columns, rows]);
+  async function handleSubmit() {
+    try {
+      await login(email, password)
+      alert('Login realizado com sucesso!')
+    } catch {
+      alert('Erro ao fazer login')
+    }
+  }
 
   return (
-    <div className="w-screen h-screen overflow-hidden relative">
-        <div className={`absolute h-[15%] w-1/3 bg-white shadow-sombraPadrao rounded-sm px-8 py-6 top-[15%] left-1/3 z-10 flex-col font-fredoka flex items-center`}>
-        
-            <div className='w-full  h-max flex justify-center items-start flex-col text-cinzaEscuro'>
-                    <h1 className='text-3xl'>Login</h1>
-                    <p className='text-md text-gray-400 mt-2'>Faça o login para acessar todas as funcionalidades! </p>
-            </div>
-        </div>
-        <div className={`absolute h-1/4 w-1/3 bg-white shadow-sombraPadrao rounded-sm p-8 top-[32%] left-1/3 z-10 flex-col font-fredoka flex items-center`}>
-            
-            <form className='w-full h-max'>
-            <label htmlFor="email">
-                <h1 className="text-md text-gray-500">E-MAIL:</h1>
-            </label>
-                <input type='email' id="email" className='w-full h-10 py-2 outline-none placeholder:text-gray-300' placeholder='email@email.com.br'></input>
-            <label htmlFor="password">
-             <h1 className="text-md text-gray-500 mt-4">SENHA:</h1>
-            </label>
-                <input type='password' className='w-full h-10 py-2 outline-none placeholder:text-gray-300' placeholder='senha'></input>
-                
-            </form>
-        <div className='flex flex-row w-max gap-8'>
-        <div
-                    className="group mt-8 flex min-h-12 w-60 cursor-pointer items-center justify-center rounded-sm shadow-sombraPadrao bg-white border-cinzaBordas text-cinzaEscuro text-xl  transition-all duration-150 ease-in-out"
-                  >
-                    <div>Não tenho conta</div>
-                    <div className="ml-2 h-6 w-0 translate-x-[20px] text-white opacity-0 transition-all duration-300 ease-in-out group-hover:w-6 group-hover:translate-x-0 group-hover:opacity-100 text-cinzEscuro">
-                      <FontAwesomeIcon className='text-cinzaEscuro mb-[0.5]' icon={faUser} />
-                    </div>
-                  </div>
-        <div
-                    className="group mt-8 flex min-h-12 w-60 cursor-pointer items-center justify-center rounded-sm bg-black text-xl font-semibold text-white transition-all duration-150 ease-in-out"
-                  >
-                    <div>Acessar</div>
-                    <div className="ml-2 h-6 w-0 translate-x-[20px] text-white opacity-0 transition-all duration-300 ease-in-out group-hover:w-6 group-hover:translate-x-0 group-hover:opacity-100">
-                      <FontAwesomeIcon className='mb-[1.5px]' icon={faHouse} />
-                    </div>
-                  </div>
+    <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden">
+      <div className="left-1/3 top-[28%] flex h-max w-max flex-col gap-8">
+        <LoginTitle />
+        <LoginForm
+          setEmail={setEmail}
+          email={email}
+          password={password}
+          setPassword={setPassword}
+        />
+        <LoginButtons handleSubmit={handleSubmit} />
+      </div>
+      <BackGroundAnimatedGrid squareSize={30} />
+    </div>
+  )
+}
 
-        </div>
-        </div>
-      <div
-        className="grid blur-sm transition-all"
-        style={{
-          gridTemplateColumns: `repeat(${columns}, ${squareSize}px)`,
-          gridTemplateRows: `repeat(${rows}, ${squareSize}px)`,
-        }}
-      >
-        {Array.from({ length: columns * rows }).map((_, i) => (
-          <div
-            key={i}
-            className={`border border-white transition-all duration-1000 ease-in-out ${
-              visibleSquares.has(i) ? 'bg-red-200' : 'bg-white'
-            }`}
-            style={{ width: squareSize, height: squareSize }}
-          />
-        ))}
+export function LoginTitle() {
+  return (
+    <div
+      className={`shadow-sombraPadrao z-10 flex h-full w-full flex-col items-center rounded-sm bg-white px-8 py-6 font-fredoka`}
+    >
+      <div className="flex h-max w-full flex-col items-start justify-center text-cinzaEscuro">
+        <h1 className="text-3xl">Login</h1>
+        <p className="text-md mt-2 text-gray-400">
+          Faça o login para acessar todas as funcionalidades!{' '}
+        </p>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SquareGrid;
+type LoginFormProps = {
+  email: string
+  password: string
+  setEmail: React.Dispatch<React.SetStateAction<string>>
+  setPassword: React.Dispatch<React.SetStateAction<string>>
+}
+
+export function LoginForm({
+  email,
+  password,
+  setEmail,
+  setPassword
+}: LoginFormProps) {
+  return (
+    <div
+      className={`shadow-sombraPadrao z-10 flex h-full w-full flex-col items-center rounded-sm bg-white p-8 font-fredoka`}
+    >
+      <form className="h-max w-full">
+        <label htmlFor="email">
+          <h1 className="text-md text-gray-500">E-MAIL:</h1>
+        </label>
+        <input
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+          type="email"
+          id="email"
+          className="h-10 w-full py-2 outline-none placeholder:text-gray-300"
+          placeholder="email@email.com.br"
+        ></input>
+        <label htmlFor="password">
+          <h1 className="text-md mt-4 text-gray-500">SENHA:</h1>
+        </label>
+        <input
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          type="password"
+          className="h-10 w-full py-2 outline-none placeholder:text-gray-300"
+          placeholder="senha"
+        ></input>
+      </form>
+    </div>
+  )
+}
+
+export function LoginButtons({
+  handleSubmit
+}: {
+  handleSubmit: () => Promise<void>
+}) {
+  return (
+    <div className="h-15 z-10 flex w-full flex-row gap-8">
+      <div className="shadow-sombraPadrao group flex min-h-12 w-60 cursor-pointer items-center justify-center rounded-sm border-cinzaBordas bg-white text-xl text-cinzaEscuro transition-all duration-150 ease-in-out">
+        <div>Não tenho conta</div>
+        <div className="text-cinzEscuro ml-2 h-6 w-0 translate-x-[20px] text-white opacity-0 transition-all duration-300 ease-in-out group-hover:w-6 group-hover:translate-x-0 group-hover:opacity-100">
+          <FontAwesomeIcon
+            className="mb-[0.5] text-cinzaEscuro"
+            icon={faUser}
+          />
+        </div>
+      </div>
+      <div
+        onClick={handleSubmit}
+        className="group flex min-h-12 w-60 cursor-pointer items-center justify-center rounded-sm bg-black text-xl font-semibold text-white transition-all duration-150 ease-in-out"
+      >
+        <div>Acessar</div>
+        <div className="ml-2 h-6 w-0 translate-x-[20px] text-white opacity-0 transition-all duration-300 ease-in-out group-hover:w-6 group-hover:translate-x-0 group-hover:opacity-100">
+          <FontAwesomeIcon className="mb-[1.5px]" icon={faHouse} />
+        </div>
+      </div>
+    </div>
+  )
+}

@@ -1,6 +1,7 @@
 // context/AuthContext.tsx
 import { createContext, useContext, useState, useEffect } from 'react'
 import { User } from '../types/user'
+import { environments } from '@/utils/env/enviroments'
 
 type AuthContextType = {
   user: User | null
@@ -31,7 +32,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Função de login
   async function login(email: string, password: string) {
-    const res = await fetch('/auth/login', {
+    const res = await fetch(`${environments.backendUrl}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -42,7 +43,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const data = await res.json()
 
     // Buscar dados do usuário
-    const meRes = await fetch('/auth/me', {
+    const meRes = await fetch(`${environments.backendUrl}/auth/me`, {
       headers: { Authorization: `Bearer ${data.access_token}` }
     })
     const meData = await meRes.json()
@@ -59,7 +60,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Função de registro
   async function register(full_name: string, email: string, password: string) {
-    const res = await fetch('/auth/register', {
+    const res = await fetch(`${environments.backendUrl}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ full_name, email, password })
