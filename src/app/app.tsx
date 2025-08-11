@@ -10,7 +10,7 @@ import { SearchWrapper } from './layouts/searchWrapper'
 export function App() {
   return (
     <>
-      <Router basename="/scrapihaus_front/">
+      <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route element={<AuthWrapper />}>
