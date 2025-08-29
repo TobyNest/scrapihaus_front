@@ -56,8 +56,8 @@ export default function SearchSection() {
 
   return <div className="min-h-[240px] w-[712px] flex flex-col justify-between gap-[8px]">
     <div className="w-full min-h-[123px] bg-bg bg-opacity-60 rounded-[4px] flex flex-col px-[24px] py-[16px]">
-      <div className="h-full w-full  flex flex-row items-center justify-center gap-[8px]">
-      <FontAwesomeIcon icon={faMagnifyingGlass} className="text-xl text-text-muted"/>
+      <div className="h-full w-full  flex flex-row items-start justify-center gap-[8px]">
+      <FontAwesomeIcon icon={faMagnifyingGlass} className="text-xl text-text-muted mt-[4px]"/>
       <div className="w-full h-full px-[8px] flex flex-wrap items-center justify-start gap-[16px]">
         {selected.map((bairro, index)=> {
           return <div key={index} onClick={() => removeBairro(bairro)} className="cursor-pointer group h-[32px] w-min bg-bg border border-bg-light rounded-[2px] text-text font-roboto text-base whitespace-nowrap inline-flex items-center justify-center px-[12px] py-[4px] font-light gap-[8px]">
