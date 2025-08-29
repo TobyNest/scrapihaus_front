@@ -19,3 +19,47 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 
+
+@layer base {
+  :root {
+    --bg-dark: 0 0% 85%;
+    --bg: 0 0% 90%;
+    --bg-60: 0 0% 90% / 0.6;
+    --bg-light: 0 0% 95%;
+
+    --text: 0 0% 10%;
+    --text-muted: 0 0% 30%;
+
+    --highlight: 225 98% 67%;
+    --border: 225 100% 64%;
+    --border-muted: 245 100% 71%;
+
+    --danger: 7 100% 34%;
+    --warning: 53 91% 52%;
+    --success: 162 100% 38%;
+    --info: 217 100% 70%;
+    --table-light: 0 0% 24%;
+  }
+
+  .dark {
+    --bg-dark: 225 6% 13%;
+    --bg: 225 4% 20%;
+    --bg-60: 225 4% 20% / 0.6;
+    --bg-light: 214 4% 39%;
+
+    --text: 0 0% 95%;
+    --text-muted: 0 0% 70%;
+
+    --highlight: 225 98% 67%;
+    --border: 225 99% 65%;
+    --border-muted: 225 100% 50%;
+
+    --danger: 7 100% 66%;
+    --warning: 53 91% 48%;
+    --success: 162 100% 22%;
+    --info: 217 100% 70%;
+    --table-light: 0 0% 24%;
+  }
+}
+
+
