@@ -8,7 +8,7 @@ export default function SearchSection() {
 
   const [query, setQuery] = useState("")
   const [selected, setSelected] = useState<string[]>([])
-  const [activeIndex, setActiveIndex] = useState<number>(-1)
+  const [activeIndex, setActiveIndex] = useState<number>(0)
   const [filtered, setFiltered] = useState<string[]>([])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,9 +20,9 @@ export default function SearchSection() {
       return
     }
 
-    const results = bairrosSP.filter((bairro) => bairro.toLowerCase().includes(value.toLowerCase()))
+    const results = bairrosSP.filter((bairro) => bairro.toLowerCase().includes(value.toLowerCase())).filter((bairro) => !selected.includes(bairro))
     setFiltered(results)
-    setActiveIndex(-1)
+    setActiveIndex(0)
   }
 
   const handleKeyDown = (e:React.KeyboardEvent<HTMLInputElement>) => {
@@ -41,7 +41,8 @@ export default function SearchSection() {
   }
 
   const addBairro = (bairro: string) => {
-    if (!selected.includes(bairro)) {
+    
+    if (!selected.includes(bairro) && bairro.length > 0) {
       setSelected([...selected,bairro])
     }
     setQuery("")
@@ -53,11 +54,11 @@ export default function SearchSection() {
     setSelected((prev)=>prev.filter((b) => b !== bairro))
   }
 
-  return <div className="h-[240px] w-[712px] flex flex-col justify-between ">
-    <div className="w-full h-[123px] bg-bg bg-opacity-60 rounded-[4px] flex flex-col px-[24px] py-[16px]">
-      <div className="h-1/2 w-full  flex flex-row items-center justify-center gap-[8px]">
+  return <div className="min-h-[240px] w-[712px] flex flex-col justify-between gap-[8px]">
+    <div className="w-full min-h-[123px] bg-bg bg-opacity-60 rounded-[4px] flex flex-col px-[24px] py-[16px]">
+      <div className="h-full w-full  flex flex-row items-center justify-center gap-[8px]">
       <FontAwesomeIcon icon={faMagnifyingGlass} className="text-xl text-text-muted"/>
-      <div className="w-full  h-full px-[8px] flex flex-row items-center justify-start gap-[16px]">
+      <div className="w-full h-full px-[8px] flex flex-wrap items-center justify-start gap-[16px]">
         {selected.map((bairro, index)=> {
           return <div key={index} onClick={() => removeBairro(bairro)} className="cursor-pointer group h-[32px] w-min bg-bg border border-bg-light rounded-[2px] text-text font-roboto text-base whitespace-nowrap inline-flex items-center justify-center px-[12px] py-[4px] font-light gap-[8px]">
             <h1>{bairro}</h1>
@@ -66,11 +67,11 @@ export default function SearchSection() {
 
         })}
         <div className="relative ">
-        <input type="text" value={query} onChange={handleChange} onKeyDown={handleKeyDown} placeholder="Digite um bairro..." className="w-full h-full bg-transparent border-0 focus:outline-none text-text font-roboto"></input>
+        <input type="text" value={query} onChange={handleChange} onKeyDown={handleKeyDown} placeholder="Digite um bairro..." className="w-[130px] h-[32px] bg-transparent border-0 focus:outline-none text-text font-roboto"></input>
         {query && filtered.length > 0 && (
           <ul className="absolute z-10 mt-1 w-full rounded-[4px] border-border border bg-bg-light">
             {filtered.map((bairro, index) => {
-              return <li key={bairro} onClick={() => addBairro(bairro)} className={`cursor-pointer px-3 py-2 hover:bg-bg-dark ${index === activeIndex ? "bg-border" : ""}`}>
+              return <li key={bairro} onClick={() => addBairro(bairro)} onMouseEnter={() => setActiveIndex(index)}  className={`cursor-pointer px-3 py-2 ${index === activeIndex ? "bg-border" : ""}`}>
                 {bairro}
               </li>
             })
