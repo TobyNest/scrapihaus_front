@@ -4,12 +4,21 @@ import { Housing } from '../types/housing'
 import { SearchParams } from '../types/searchParams'
 import { environments } from '@/utils/env/enviroments'
 import { History } from '../types/history'
+import { useNavigate } from 'react-router-dom'
 
 type SearchController = {
   housings: Housing[]
-  searches: History[] // histórico do usuário
+  searches: History[]
   loading: boolean
   error: string | null
+  searchParams: SearchParams
+  selectedOption: number
+  updateField: <K extends keyof SearchParams>(
+    key: K,
+    value: SearchParams[K]
+  ) => void
+  handleTypeChange: (index: number) => void
+  setSearchParams: React.Dispatch<React.SetStateAction<SearchParams>>
   buscarHousings: (params: SearchParams) => Promise<void>
   fetchMySearches: () => Promise<void>
 }
@@ -22,13 +31,42 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  // 🔎 estados que estavam no componente
+  const [searchParams, setSearchParams] = useState<SearchParams>({
+    tipo: 'Casa' // valor padrão
+  })
+  const [selectedOption, setSelectedOption] = useState<number>(0)
 
+  // Atualiza qualquer campo de SearchParams
+  const updateField = <K extends keyof SearchParams>(
+    key: K,
+    value: SearchParams[K]
+  ) => {
+    setSearchParams((prev) => ({
+      ...prev,
+      [key]: value
+    }))
+  }
+
+  // Troca o tipo de imóvel (Casa, Apartamento, etc.)
+  const handleTypeChange = (index: number) => {
+    const typeOptions = ['Casa', 'Apartamento', 'Terreno/Lote']
+    const selectedType = typeOptions[index]
+
+    if (!selectedType) return
+    setSelectedOption(index)
+    setSearchParams((prev) => ({
+      ...prev,
+      tipo: selectedType
+    }))
+  }
+
+  // 🔍 pesquisa de imóveis
   async function buscarHousings(params: SearchParams) {
     setLoading(true)
     setError(null)
 
     try {
-      // Remove campos undefined, null ou vazios e transforma tudo em string
       const filteredParams = Object.fromEntries(
         Object.entries(params)
           .filter(([_, v]) => v !== undefined && v !== null && v !== '')
@@ -40,7 +78,7 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
       const response = await fetch(
         `${environments.backendUrl}/housings/?${query}`,
         {
-          method: 'GET',
+          method: 'GET'
         }
       )
 
@@ -56,14 +94,14 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  // 🔁 histórico de buscas
   async function fetchMySearches() {
-
     setLoading(true)
     setError(null)
 
     try {
       const res = await fetch(`${environments.backendUrl}/my-searches`, {
-        method: 'GET',
+        method: 'GET'
       })
 
       if (!res.ok) throw new Error('Erro ao buscar histórico')
@@ -85,6 +123,11 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
         searches,
         loading,
         error,
+        searchParams,
+        selectedOption,
+        updateField,
+        handleTypeChange,
+        setSearchParams,
         buscarHousings,
         fetchMySearches
       }}
