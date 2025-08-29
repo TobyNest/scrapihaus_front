@@ -9,21 +9,20 @@ import { AuthProvider } from './contexts/authContext'
 export function App() {
   return (
     <>
-            <Router basename="/scrapihaus_front/">
-          <AuthProvider>
-              <Routes>
-                
-                <Route path="/" element={<HomePage />} />
-                  <Route path="/login" element={<LoginPage />} />
-                  <Route path="/register" element={<RegisterPage />} />
+      <Router>
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
 
-                  <Route path="/search" element={<SearchPage />}/>
-                  <Route path="result" element={<ResultPage />} />
+            <Route path="/search" element={<SearchPage />} />
+            <Route path="result" element={<ResultPage />} />
 
-                  <Route path="*" element={<h1>Not Found</h1>} />
-              </Routes>
-          </AuthProvider>
-            </Router>
+            <Route path="*" element={<h1>Not Found</h1>} />
+          </Routes>
+        </AuthProvider>
+      </Router>
     </>
   )
 }
