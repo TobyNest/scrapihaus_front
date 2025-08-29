@@ -8,7 +8,7 @@ export default function SearchSection() {
 
   const [query, setQuery] = useState("")
   const [selected, setSelected] = useState<string[]>([])
-  const [activeIndex, setActiveIndex] = useState<number>(-1)
+  const [activeIndex, setActiveIndex] = useState<number>(0)
   const [filtered, setFiltered] = useState<string[]>([])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,9 +20,9 @@ export default function SearchSection() {
       return
     }
 
-    const results = bairrosSP.filter((bairro) => bairro.toLowerCase().includes(value.toLowerCase()))
+    const results = bairrosSP.filter((bairro) => bairro.toLowerCase().includes(value.toLowerCase())).filter((bairro) => !selected.includes(bairro))
     setFiltered(results)
-    setActiveIndex(-1)
+    setActiveIndex(0)
   }
 
   const handleKeyDown = (e:React.KeyboardEvent<HTMLInputElement>) => {
@@ -41,7 +41,8 @@ export default function SearchSection() {
   }
 
   const addBairro = (bairro: string) => {
-    if (!selected.includes(bairro)) {
+    
+    if (!selected.includes(bairro) && bairro.length > 0) {
       setSelected([...selected,bairro])
     }
     setQuery("")
