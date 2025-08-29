@@ -4,7 +4,6 @@ import { Housing } from '../types/housing'
 import { SearchParams } from '../types/searchParams'
 import { environments } from '@/utils/env/enviroments'
 import { History } from '../types/history'
-import { useAuth } from './authContext' // para pegar o token do usuário logado
 
 type SearchController = {
   housings: Housing[]
@@ -23,7 +22,6 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const { user } = useAuth()
 
   async function buscarHousings(params: SearchParams) {
     setLoading(true)
@@ -43,7 +41,6 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
         `${environments.backendUrl}/housings/?${query}`,
         {
           method: 'GET',
-          headers: { Authorization: `Bearer ${user?.access_token}` }
         }
       )
 
@@ -60,7 +57,6 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function fetchMySearches() {
-    if (!user) return // só busca se estiver logado
 
     setLoading(true)
     setError(null)
@@ -68,7 +64,6 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
     try {
       const res = await fetch(`${environments.backendUrl}/my-searches`, {
         method: 'GET',
-        headers: { Authorization: `Bearer ${user.access_token}` }
       })
 
       if (!res.ok) throw new Error('Erro ao buscar histórico')

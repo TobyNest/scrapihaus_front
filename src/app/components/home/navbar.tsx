@@ -5,7 +5,7 @@ export default function NavBar() {
   const navigate = useNavigate()
 
   return (
-    <div className="sticky top-0 flex h-[56px] w-full flex-row items-center justify-between bg-transparent">
+    <div className="sticky z-50 top-0 flex h-[56px] w-full flex-row items-center justify-between bg-transparent">
       <div className="h-full w-[200px]">
         <h1 className="m-0 flex h-full w-full items-center justify-start font-bold text-text">
           SCRAPIHAUS

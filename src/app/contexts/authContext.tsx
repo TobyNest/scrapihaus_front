@@ -25,7 +25,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const location = useLocation()
 
   useEffect(() => {
-    const publicRoutes = ['/login', '/register']
+    const publicRoutes = ['/','/login', '/register']
 
     if (publicRoutes.includes(location.pathname)) {
       return
