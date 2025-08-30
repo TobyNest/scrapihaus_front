@@ -15,6 +15,6 @@ export default function ThemeToggle() {
       ) : (
         <FontAwesomeIcon icon={faSun} />
       )}
-    </button>
+    </button> 
   )
 }

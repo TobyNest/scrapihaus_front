@@ -1,11 +1,70 @@
 import BackGroundAnimatedGrid from '@/app/components/authentication/loginPage/backgroundGrid'
+import ThemeToggle from '@/app/components/home/themeToggle'
 import { useAuth } from '@/app/contexts/authContext'
 import { faHouse, faUser } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useState } from 'react'
+import { SetStateAction, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export default function RegisterPage() {
+  const { register } = useAuth()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [full_name, setFullName] = useState('')
+
+  const navigate = useNavigate()
+
+  async function handleSubmit() {
+    try {
+      await register(full_name, email, password)
+      navigate('/search')
+    } catch {
+      alert('Erro ao fazer login')
+    }
+  }
+
+  return (
+    <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden bg-bg-dark font-roboto text-text">
+      <div className="absolute top-0 flex h-[48px] w-full items-center justify-end"></div>
+      <div className="flex h-full w-full max-w-[684px] flex-col items-center justify-center gap-[32px]">
+        <ThemeToggle />
+        <h1 className="m-0 flex h-min w-min items-center justify-start text-[24px] font-bold text-text">
+          SCRAPIHAUS
+        </h1>
+        <div className="flex h-[64px] w-full flex-col items-center justify-center gap-[8px]">
+          <h1 className="text-[32px] font-regular">Primeira vez por aqui?</h1>
+          <h1 className="text-[16px] font-regular text-text-muted">
+            Já possui cadastro?{' '}
+            <span
+              onClick={() => navigate('/login')}
+              className="cursor-pointer text-text underline"
+            >
+              Acesse sua conta
+            </span>{' '}
+          </h1>
+        </div>
+        <RegisterForm
+          email={email}
+          password={password}
+          fullname={full_name}
+          setEmail={setEmail}
+          setFullName={setFullName}
+          setPassword={setPassword}
+        />
+        <div
+          onClick={handleSubmit}
+          className="flex h-[40px] w-[400px] cursor-pointer items-center justify-center rounded-[4px] bg-border text-[16px] font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-highlight"
+        >
+          Registrar
+        </div>
+      </div>
+      <div className="pointer-events-none absolute right-[-200px] top-[-200px] h-[600px] w-[600px] rounded-full bg-border opacity-50 blur-[150px]"></div>
+      <div className="pointer-events-none absolute bottom-[-200px] left-[-200px] h-[600px] w-[600px] rounded-full bg-border opacity-50 blur-[150px]"></div>
+    </div>
+  )
+}
+
+export function OldRegisterPage() {
   // Auth
   const { register } = useAuth()
   const [email, setEmail] = useState('')
@@ -47,7 +106,7 @@ export function RegisterTitle() {
     <div
       className={`z-10 flex h-full w-full flex-col items-center rounded-sm bg-white px-8 py-6 font-fredoka shadow-sombraPadrao`}
     >
-      <div className="flex h-max w-full flex-col items-start justify-center text-cinzaEscuro">
+      <div className="text-cinzaEscuro flex h-max w-full flex-col items-start justify-center">
         <h1 className="text-3xl">Registre-se</h1>
         <p className="text-md mt-2 text-gray-400">
           Por favor registre-se para acessar todas as funcionalidades!
@@ -75,43 +134,33 @@ export function RegisterForm({
   setPassword
 }: RegisterFormProps) {
   return (
-    <div
-      className={`z-10 flex h-full w-full flex-col items-center rounded-sm bg-white p-8 font-fredoka shadow-sombraPadrao`}
-    >
-      <form className="h-max w-full">
-        <label htmlFor="full-name">
-          <h1 className="text-md text-gray-500">NOME COMPLETO:</h1>
-        </label>
-        <input
-          onChange={(e) => setFullName(e.target.value)}
-          value={fullname}
-          type="text"
-          id="full-name"
-          className="h-10 w-full py-2 outline-none placeholder:text-gray-300"
-          placeholder="Nome Sobrenome"
-        ></input>
-        <label htmlFor="email">
-          <h1 className="text-md mt-4 text-gray-500">E-MAIL:</h1>
-        </label>
-        <input
-          onChange={(e) => setEmail(e.target.value)}
-          value={email}
-          type="email"
-          id="email"
-          className="h-10 w-full py-2 outline-none placeholder:text-gray-300"
-          placeholder="email@email.com.br"
-        ></input>
-        <label htmlFor="password">
-          <h1 className="text-md mt-4 text-gray-500">SENHA:</h1>
-        </label>
-        <input
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          type="password"
-          className="h-10 w-full py-2 outline-none placeholder:text-gray-300"
-          placeholder="senha"
-        ></input>
-      </form>
+    <div className="item-center flex h-[136px] w-full flex-col items-center justify-center gap-[8px] px-12 py-16">
+      {['Seu Nome', 'E-mail', 'Senha'].map((placeholder) => {
+        return (
+          <form>
+            <input
+              onChange={(e) =>
+                placeholder == 'E-mail'
+                  ? setEmail(e.target.value)
+                  : placeholder == 'Seu Nome'
+                    ? setFullName(e.target.value)
+                    : setPassword(e.target.value)
+              }
+              value={
+                placeholder == 'E-mail'
+                  ? email
+                  : placeholder == 'Seu Nome'
+                    ? fullname
+                    : password
+              }
+              className="placeholder:font-extra-light h-[48px] w-[400px] rounded-[4px] bg-bg bg-opacity-60 px-[12px] py-[16px] text-text outline-none placeholder:text-[16px] placeholder:text-text-muted focus:border-border focus:outline-none"
+              type={placeholder === 'Senha' ? 'password' : 'text'}
+              placeholder={placeholder}
+              key={placeholder}
+            ></input>
+          </form>
+        )
+      })}
     </div>
   )
 }
@@ -127,12 +176,12 @@ export function RegisterButtons({
     <div className="h-15 z-10 flex w-full flex-row gap-8">
       <div
         onClick={() => navigate('/login')}
-        className="group flex min-h-12 w-60 cursor-pointer items-center justify-center rounded-sm border-cinzaBordas bg-white text-xl text-cinzaEscuro shadow-sombraPadrao transition-all duration-150 ease-in-out"
+        className="border-cinzaBordas text-cinzaEscuro group flex min-h-12 w-60 cursor-pointer items-center justify-center rounded-sm bg-white text-xl shadow-sombraPadrao transition-all duration-150 ease-in-out"
       >
         <div>Já sou cadastrado</div>
         <div className="text-cinzEscuro ml-2 h-6 w-0 translate-x-[20px] text-white opacity-0 transition-all duration-300 ease-in-out group-hover:w-6 group-hover:translate-x-0 group-hover:opacity-100">
           <FontAwesomeIcon
-            className="mb-[0.5] text-cinzaEscuro"
+            className="text-cinzaEscuro mb-[0.5]"
             icon={faUser}
           />
         </div>
