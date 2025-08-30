@@ -10,6 +10,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import TypeSelector from '../searchPage/typeSelector'
 
 export default function SearchSection() {
   const {
@@ -24,7 +25,7 @@ export default function SearchSection() {
   const navigate = useNavigate()
 
   return (
-    <div className="flex min-h-[240px] w-[712px] flex-col justify-between gap-[8px]">
+    <div className="flex min-h-[240px] w-[712px] flex-col justify-between gap-[8px] font-roboto">
       <div className="flex min-h-[123px] w-full flex-col rounded-[4px] bg-bg bg-opacity-60 px-[24px] py-[16px]">
         <div className="flex h-full w-full flex-col gap-[24px]">
           <BairroTagSearch />
@@ -48,10 +49,95 @@ export default function SearchSection() {
           </div>
         </div>
       </div>
-      <div className="h-[52px] w-full rounded-[4px] bg-bg opacity-60">
-        
+      <div className="h-[52px] w-full rounded-[4px] bg-bg bg-opacity-60 px-[16px] py-[8px]">
+        <AreaAndTypeSelector
+          minAreaValue={searchParams.min_area}
+          setMinArea={updateField.bind(null, 'min_area')}
+          maxAreaValue={searchParams.max_area}
+          setMaxArea={updateField.bind(null, 'max_area')}
+          setSelectedOption={handleTypeChange}
+          selectedOption={selectedOption}
+        />
       </div>
-      <div className="h-[40px] w-full rounded-[4px] bg-border"></div>
+      <div
+        onClick={() => {
+          buscarHousings(searchParams)
+          navigate('/search/results')
+        }}
+        className="hover:bg-border-dark flex h-[40px] w-full items-center justify-center rounded-[4px] bg-border font-roboto text-sm font-medium text-white transition-all duration-150 ease-in-out hover:cursor-pointer"
+      >
+        PESQUISAR
+      </div>
+    </div>
+  )
+}
+
+export function AreaAndTypeSelector({
+  minAreaValue,
+  setMinArea,
+  maxAreaValue,
+  setMaxArea,
+  selectedOption,
+  setSelectedOption
+}: {
+  minAreaValue: number | undefined
+  setMinArea: (area: number | undefined) => void
+  maxAreaValue: number | undefined
+  setMaxArea: (area: number | undefined) => void
+  setSelectedOption: (value: number) => void
+  selectedOption: number
+}) {
+  return (
+    <div className="flex h-full w-full flex-row">
+      <div className="flex h-full w-[45%] flex-row items-center justify-start gap-[16px]">
+        <div className="flex flex-row items-center justify-center gap-[8px]">
+          <input
+            onChange={() => setMinArea(minAreaValue)}
+            value={minAreaValue}
+            type="number"
+            className="h-[32px] w-[96px] rounded-[2px] border border-bg-light bg-bg px-2 text-text focus:outline-none"
+          ></input>
+          <h1 className="flex items-center justify-center text-text">m²</h1>
+        </div>
+        <h1 className="text-text">até</h1>
+        <div className="flex flex-row items-center justify-center gap-[8px]">
+          <input
+            onChange={() => setMaxArea(maxAreaValue)}
+            value={maxAreaValue}
+            type="number"
+            className="h-[32px] w-[96px] rounded-[2px] border border-bg-light bg-bg px-2 text-text focus:outline-none"
+          ></input>
+          <h1 className="flex items-center justify-center text-text">m²</h1>
+        </div>
+      </div>
+      <div className="flex h-full w-[55%] items-center justify-end">
+        <div className="flex-rol relative flex h-full w-[90%] border border-bg-light font-roboto text-text">
+          <div
+            onClick={() => setSelectedOption(0)}
+            className={`z-10 flex h-full w-1/3 cursor-pointer select-none items-center justify-center rounded-l-full bg-transparent transition-all duration-150 ease-in-out`}
+          >
+            Casa
+          </div>
+          <div
+            onClick={() => setSelectedOption(1)}
+            className={`z-10 flex h-full w-1/3 cursor-pointer select-none items-center justify-center bg-transparent transition-all duration-150 ease-in-out`}
+          >
+            Apartamento
+          </div>
+          <div
+            onClick={() => setSelectedOption(2)}
+            className={`z-10 flex h-full w-1/3 cursor-pointer select-none items-center justify-center rounded-r-full bg-transparent transition-all duration-150 ease-in-out`}
+          >
+            Terreno/Lote
+          </div>
+          <div
+            className={`pointer-events: none bg-cinzaEscuro absolute h-full w-1/3 rounded-sm ${selectedOption == 0 ? 'left-0' : selectedOption == 1 ? 'left-1/3' : 'left-2/3'} transition-all duration-150 ease-in-out`}
+          ></div>
+          <div
+            className={`pointer-events: none absolute h-full w-1/3 bg-border ${selectedOption == 0 ? 'left-0' : selectedOption == 1 ? 'left-1/3' : 'left-2/3'} transition-all duration-150 ease-in-out`}
+          ></div>
+        </div>
+      </div>
     </div>
   )
 }
@@ -84,7 +170,8 @@ export function NumberSelector({
           onClick={
             value == number ? () => setValue(undefined) : () => setValue(number)
           }
-          className={` ${number === value ? 'bg-border text-white' : 'bg-bg-light text-text hover:bg-border hover:text-white'} flex h-[24px] w-[24px] cursor-pointer items-center justify-center rounded-full transition-all duration-150 ease-in-out`}
+          style={{ userSelect: 'none' }}
+          className={` ${number === value ? 'border-border bg-border text-white' : 'bg-bg-light text-text hover:border-border'} flex h-[24px] w-[24px] cursor-pointer items-center justify-center rounded-full border-2 border-bg-light transition-all duration-150 ease-in-out`}
           key={number}
         >
           {number}

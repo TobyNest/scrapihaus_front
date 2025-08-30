@@ -4,7 +4,6 @@ import { Housing } from '../types/housing'
 import { SearchParams } from '../types/searchParams'
 import { environments } from '@/utils/env/enviroments'
 import { History } from '../types/history'
-import { useNavigate } from 'react-router-dom'
 
 type SearchController = {
   housings: Housing[]
@@ -76,7 +75,7 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
       const query = new URLSearchParams(filteredParams).toString()
 
       const response = await fetch(
-        `${environments.backendUrl}/housings/?${query}`,
+        `${environments.backendUrl}housings/?${query}`,
         {
           method: 'GET'
         }
