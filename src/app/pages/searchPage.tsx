@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/authContext'
 import SearchSection from '../components/home/search'
 import ThemeToggle from '../components/home/themeToggle'
@@ -7,8 +6,7 @@ import gsap from 'gsap'
 import { useSearch } from '../contexts/searchContext'
 
 export default function SearchPage() {
-  const navigate = useNavigate()
-  const { isResultPage, setIsResultPage, loading } = useSearch()
+  const { isResultPage, setIsResultPage } = useSearch()
   const { user } = useAuth()
 
   const searchContentRef = useRef(null)
@@ -103,7 +101,9 @@ export default function SearchPage() {
           >
             <button
               type="button"
-              onClick={() => setIsResultPage(false)}
+              onClick={() => {
+                setIsResultPage(false)
+              }}
               className="mt-4 rounded bg-border px-4 py-2 text-white"
             >
               Voltar

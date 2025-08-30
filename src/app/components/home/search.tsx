@@ -21,8 +21,7 @@ export default function SearchSection({
     updateField,
     selectedOption,
     buscarHousings,
-    searchParams,
-    loading
+    searchParams
   } = useSearch()
 
   const navigate = useNavigate()
