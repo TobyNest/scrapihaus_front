@@ -20,6 +20,8 @@ type SearchController = {
   setSearchParams: React.Dispatch<React.SetStateAction<SearchParams>>
   buscarHousings: (params: SearchParams) => Promise<void>
   fetchMySearches: () => Promise<void>
+  isResultPage?: boolean
+  setIsResultPage: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const SearchContext = createContext<SearchController | undefined>(undefined)
@@ -29,6 +31,8 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
   const [searches, setSearches] = useState<History[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const [isResultPage, setIsResultPage] = useState(false)
 
   // 🔎 estados que estavam no componente
   const [searchParams, setSearchParams] = useState<SearchParams>({
@@ -128,7 +132,9 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
         handleTypeChange,
         setSearchParams,
         buscarHousings,
-        fetchMySearches
+        fetchMySearches,
+        isResultPage,
+        setIsResultPage
       }}
     >
       {children}

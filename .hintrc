@@ -11,6 +11,12 @@
           "-moz-appearance"
         ]
       }
+    ],
+    "axe/forms": [
+      "default",
+      {
+        "label": "off"
+      }
     ]
   }
 }

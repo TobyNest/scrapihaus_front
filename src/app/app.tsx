@@ -12,7 +12,7 @@ export function App() {
       <Router>
         <AuthProvider>
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<SearchPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
 

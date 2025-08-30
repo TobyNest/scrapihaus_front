@@ -10,9 +10,12 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import TypeSelector from '../searchPage/typeSelector'
 
-export default function SearchSection() {
+export default function SearchSection({
+  variant = 'search'
+}: {
+  variant?: 'search' | 'home'
+}) {
   const {
     handleTypeChange,
     updateField,
@@ -26,7 +29,9 @@ export default function SearchSection() {
 
   return (
     <div className="flex min-h-[240px] w-[712px] flex-col justify-between gap-[8px] font-roboto">
-      <div className="flex min-h-[123px] w-full flex-col rounded-[4px] bg-bg bg-opacity-60 px-[24px] py-[16px]">
+      <div
+        className={` ${variant == 'search' ? 'border border-bg-light' : ''} flex min-h-[123px] w-full flex-col rounded-[4px] bg-bg bg-opacity-60 px-[24px] py-[16px] transition-colors duration-500`}
+      >
         <div className="flex h-full w-full flex-col gap-[24px]">
           <BairroTagSearch />
 
@@ -49,7 +54,9 @@ export default function SearchSection() {
           </div>
         </div>
       </div>
-      <div className="h-[52px] w-full rounded-[4px] bg-bg bg-opacity-60 px-[16px] py-[8px]">
+      <div
+        className={` ${variant == 'search' ? 'border border-bg-light' : ''} h-[52px] w-full rounded-[4px] bg-bg bg-opacity-60 px-[16px] py-[8px] transition-colors duration-500`}
+      >
         <AreaAndTypeSelector
           minAreaValue={searchParams.min_area}
           setMinArea={updateField.bind(null, 'min_area')}
@@ -256,7 +263,6 @@ export function BairroTagSearch() {
             </div>
           )
         })}
-        {/* 🔑 Input agora cresce e respeita min-w */}
         <div className="relative min-w-[120px] flex-grow">
           <input
             type="text"
