@@ -29,7 +29,7 @@ export default function SearchSection({
   return (
     <div className="flex min-h-[240px] w-[712px] flex-col justify-between gap-[8px] font-roboto">
       <div
-        className={` ${variant == 'search' ? 'border border-bg-light' : ''} flex min-h-[123px] w-full flex-col rounded-[4px] bg-bg bg-opacity-60 px-[24px] py-[16px] transition-colors duration-500`}
+        className={` ${variant == 'search' ? 'border border-bg-light bg-bg-dark' : ''} flex min-h-[123px] w-full flex-col rounded-[4px] bg-bg bg-opacity-60 px-[24px] py-[16px] transition-colors duration-500`}
       >
         <div className="flex h-full w-full flex-col gap-[24px]">
           <BairroTagSearch />
@@ -54,7 +54,7 @@ export default function SearchSection({
         </div>
       </div>
       <div
-        className={` ${variant == 'search' ? 'border border-bg-light' : ''} h-[52px] w-full rounded-[4px] bg-bg bg-opacity-60 px-[16px] py-[8px] transition-colors duration-500`}
+        className={` ${variant == 'search' ? 'border border-bg-light bg-bg-dark' : ''} h-[52px] w-full rounded-[4px] bg-bg bg-opacity-60 px-[16px] py-[8px] transition-colors duration-500`}
       >
         <AreaAndTypeSelector
           minAreaValue={searchParams.min_area}

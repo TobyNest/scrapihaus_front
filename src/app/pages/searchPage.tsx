@@ -49,7 +49,17 @@ export default function SearchPage() {
   return (
     <div className="relative flex h-screen w-screen flex-col items-center justify-center bg-bg-dark text-text transition-colors duration-500">
       <div className="flex h-[8%] w-full flex-row">
-        <div className="h-full w-[20%]"></div>
+        <div className="h-full w-[20%] flex items-center justify-center font-roboto">
+          <div className='h-[32px] w-full flex flex-row gap-[8px]'>
+            <div className='w-[48px] h-[40px] bg-bg-light rounded-full'></div>
+            <div className='w-full h-[32px] flex flex-col'>
+              <h1 className='text-[16px] font-bold text-text'>{user?.full_name || "Breno Amorim Roman"}</h1>
+              <h1 className='text-[12px] font-extralight text-text-muted'>{user?.email || "teste99@gmail.com"}</h1>
+            </div>
+            
+          </div>
+          
+        </div>
         <div className="flex h-full w-full flex-row items-center justify-between pr-[16px] text-[24px] font-semibold">
           <div className="flex flex-row gap-[32px]">
             <h1>Pesquisa</h1>
