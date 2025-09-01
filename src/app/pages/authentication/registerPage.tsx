@@ -25,7 +25,10 @@ export default function RegisterPage() {
       <div className="absolute top-0 flex h-[48px] w-full items-center justify-end"></div>
       <div className="flex h-full w-full max-w-[684px] flex-col items-center justify-center gap-[32px]">
         <ThemeToggle />
-        <h1 className="m-0 flex h-min w-min items-center justify-start text-[24px] font-bold text-text">
+        <h1
+          onClick={() => navigate('/')}
+          className="m-0 flex h-min w-min items-center justify-start text-[24px] font-bold text-text hover:cursor-pointer hover:text-border"
+        >
           SCRAPIHAUS
         </h1>
         <div className="flex h-[96px] w-full flex-col items-center justify-center gap-[8px]">

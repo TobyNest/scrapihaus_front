@@ -25,12 +25,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const location = useLocation()
 
   useEffect(() => {
-    const publicRoutes = ['/','/login', '/register']
+    const publicRoutes = ['/results']
 
     if (publicRoutes.includes(location.pathname)) {
+      navigate('/search')
       return
     } else {
-      navigate('/login')
       return
     }
 

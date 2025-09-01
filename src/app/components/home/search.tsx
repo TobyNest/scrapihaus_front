@@ -21,7 +21,8 @@ export default function SearchSection({
     updateField,
     selectedOption,
     buscarHousings,
-    searchParams
+    searchParams,
+    setIsResultPage
   } = useSearch()
 
   const navigate = useNavigate()
@@ -32,7 +33,7 @@ export default function SearchSection({
         className={` ${variant == 'search' ? 'border border-bg-light bg-bg-dark' : ''} flex min-h-[123px] w-full flex-col rounded-[4px] bg-bg bg-opacity-60 px-[24px] py-[16px] transition-colors duration-500`}
       >
         <div className="flex h-full w-full flex-col gap-[24px]">
-          <BairroTagSearch />
+          <BairroTagSearch setBairros={updateField.bind(null, 'bairros')} />
 
           <div className="flex h-[24px] w-full flex-row justify-between gap-[16px]">
             <NumberSelector
@@ -57,10 +58,10 @@ export default function SearchSection({
         className={` ${variant == 'search' ? 'border border-bg-light bg-bg-dark' : ''} h-[52px] w-full rounded-[4px] bg-bg bg-opacity-60 px-[16px] py-[8px] transition-colors duration-500`}
       >
         <AreaAndTypeSelector
-          minAreaValue={searchParams.min_area}
-          setMinArea={updateField.bind(null, 'min_area')}
-          maxAreaValue={searchParams.max_area}
-          setMaxArea={updateField.bind(null, 'max_area')}
+          minAreaValue={searchParams.area_min}
+          setMinArea={updateField.bind(null, 'area_min')}
+          maxAreaValue={searchParams.area_max}
+          setMaxArea={updateField.bind(null, 'area_max')}
           setSelectedOption={handleTypeChange}
           selectedOption={selectedOption}
         />
@@ -68,7 +69,8 @@ export default function SearchSection({
       <div
         onClick={() => {
           buscarHousings(searchParams)
-          navigate('/search/results')
+          setIsResultPage(true)
+          navigate('/search')
         }}
         className="hover:bg-border-dark flex h-[40px] w-full items-center justify-center rounded-[4px] bg-border font-roboto text-sm font-medium text-white transition-all duration-150 ease-in-out hover:cursor-pointer"
       >
@@ -98,7 +100,7 @@ export function AreaAndTypeSelector({
       <div className="flex h-full w-[45%] flex-row items-center justify-start gap-[16px]">
         <div className="flex flex-row items-center justify-center gap-[8px]">
           <input
-            onChange={() => setMinArea(minAreaValue)}
+            onChange={(e) => setMinArea(Number(e.target.value))}
             value={minAreaValue}
             type="number"
             className="h-[32px] w-[96px] rounded-[2px] border border-bg-light bg-bg px-2 text-text focus:outline-none"
@@ -108,7 +110,7 @@ export function AreaAndTypeSelector({
         <h1 className="text-text">até</h1>
         <div className="flex flex-row items-center justify-center gap-[8px]">
           <input
-            onChange={() => setMaxArea(maxAreaValue)}
+            onChange={(e) => setMaxArea(Number(e.target.value))}
             value={maxAreaValue}
             type="number"
             className="h-[32px] w-[96px] rounded-[2px] border border-bg-light bg-bg px-2 text-text focus:outline-none"
@@ -187,7 +189,11 @@ export function NumberSelector({
   )
 }
 
-export function BairroTagSearch() {
+export function BairroTagSearch({
+  setBairros
+}: {
+  setBairros: (value: string | number | string[] | undefined) => void
+}) {
   const [query, setQuery] = useState('')
   const [selected, setSelected] = useState<string[]>([])
   const [activeIndex, setActiveIndex] = useState<number>(0)
@@ -233,11 +239,13 @@ export function BairroTagSearch() {
     setQuery('')
     setFiltered([])
     setActiveIndex(-1)
+    if (setBairros) setBairros([...selected, bairro])
     inputRef.current?.focus()
   }
 
   const removeBairro = (bairro: string) => {
     setSelected((prev) => prev.filter((b) => b !== bairro))
+    if (setBairros) setBairros(selected.filter((b) => b !== bairro))
   }
 
   return (

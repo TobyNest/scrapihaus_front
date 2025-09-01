@@ -26,12 +26,12 @@ const TableInfoTitle = [
 
 export default function HousingTable({ housings }: HousingListProps) {
   return (
-    <div className="h-full w-full rounded-t-xl text-sm">
+    <div className="h-full w-full rounded-t-xl bg-bg-dark text-sm transition-all duration-150 ease-in-out">
       <div className="flex h-10 w-full flex-row justify-between overflow-hidden rounded-t-xl">
         {TableInfoTitle.map((title) => (
           <div
             style={{ flex: title.flex }}
-            className={`flex h-full items-center justify-start overflow-hidden border border-r-0 border-gray-100 bg-white font-semibold last:border-r`}
+            className={`flex h-full items-center justify-start overflow-hidden border border-r-0 border-bg bg-bg-60 font-semibold last:border-r`}
           >
             <div className="flex h-full w-full items-center justify-start pl-2">
               {title.titulo}
@@ -39,7 +39,7 @@ export default function HousingTable({ housings }: HousingListProps) {
           </div>
         ))}
       </div>
-      <div className="hide-scrollbar h-full w-full overflow-y-scroll pb-14">
+      <div className="hide-scrollbar h-full w-full overflow-y-scroll bg-bg-dark pb-14">
         {housings.map((housing, index) => (
           <HousingRow housing={housing} index={index} />
         ))}
@@ -56,7 +56,7 @@ export function HousingRow({
   index: number
 }) {
   return (
-    <div className="flex h-10 w-full flex-row justify-between">
+    <div className="bg-bg-black flex h-10 w-full flex-row justify-between">
       <HousingRowCell
         value={index + 1}
         flex={TableInfoTitle[0].flex}
@@ -209,7 +209,7 @@ export function HousingRowCell({
   return (
     <div
       style={{ flex }}
-      className={`${index % 2 !== 0 ? 'bg-white' : 'bg-cinzaClaro'} flex items-center justify-start overflow-hidden border border-r-0 border-t-0 border-gray-200 first-of-type:border-r-0 last-of-type:border-r`}
+      className={`${index % 2 !== 0 ? 'bg-bg-dark' : 'bg-bg'} flex items-center justify-start overflow-hidden border border-transparent bg-opacity-60`}
     >
       <div
         onClick={() => {

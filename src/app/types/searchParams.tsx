@@ -1,9 +1,9 @@
 export interface SearchParams {
   tipo: string
-  bairro?: string
+  bairros?: string[]
   quartos?: number
   banheiros?: number
   vagas_garagem?: number
-  min_area?: number
-  max_area?: number
+  area_min?: number
+  area_max?: number
 }
