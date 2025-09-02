@@ -3,11 +3,11 @@ import { createContext, useContext, useState } from 'react'
 import { Housing } from '../types/housing'
 import { SearchParams } from '../types/searchParams'
 import { environments } from '@/utils/env/enviroments'
-import { History } from '../types/history'
+import { HousingHistory } from '../types/history'
 
 type SearchController = {
   housings: Housing[]
-  searches: History[]
+  searches: HousingHistory[]
   loading: boolean
   error: string | null
   searchParams: SearchParams
@@ -19,7 +19,7 @@ type SearchController = {
   handleTypeChange: (index: number) => void
   setSearchParams: React.Dispatch<React.SetStateAction<SearchParams>>
   buscarHousings: (params: SearchParams) => Promise<void>
-  fetchMySearches: () => Promise<void>
+  fetchMySearches: (access_token: string) => Promise<void>
   isResultPage?: boolean
   setIsResultPage: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -28,7 +28,7 @@ const SearchContext = createContext<SearchController | undefined>(undefined)
 
 export function SearchProvider({ children }: { children: React.ReactNode }) {
   const [housings, setHousings] = useState<Housing[]>([])
-  const [searches, setSearches] = useState<History[]>([])
+  const [searches, setSearches] = useState<HousingHistory[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -98,18 +98,19 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
   }
 
   // 🔁 histórico de buscas
-  async function fetchMySearches() {
+  async function fetchMySearches(access_token: string) {
     setLoading(true)
     setError(null)
 
     try {
       const res = await fetch(`${environments.backendUrl}/my-searches`, {
-        method: 'GET'
+        method: 'GET',
+        headers: { Authorization: `Bearer ${access_token}` }
       })
 
       if (!res.ok) throw new Error('Erro ao buscar histórico')
 
-      const data: History[] = await res.json()
+      const data: HousingHistory[] = await res.json()
       setSearches(data)
     } catch (err: any) {
       setError(err.message || 'Erro desconhecido')

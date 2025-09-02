@@ -1,6 +1,6 @@
-import { History } from '@/app/types/history'
+import { HousingHistory } from '@/app/types/history'
 
-export const historyMock: History[] = [
+export const historyMock: HousingHistory[] = [
   {
     tipo: 'Apartamento',
     quartos: 2,
