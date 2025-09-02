@@ -8,6 +8,7 @@ import HousingTable from '../components/resultsPage/housingTable'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { useNavigate } from 'react-router-dom'
+import SearchHistory from '../components/searchPage/searchHistory'
 
 export default function SearchPage() {
   const { isResultPage, setIsResultPage, housings } = useSearch()
@@ -57,7 +58,9 @@ export default function SearchPage() {
         <div className="flex h-full w-[20%] items-center justify-center font-roboto">
           <div className="flex h-[32px] w-full flex-row gap-[8px] pl-[16px]">
             <div
-              onClick={() => navigate('/login')}
+              onClick={() => {
+                !user ? navigate('/login') : navigate('/profile')
+              }}
               className="h-[40px] w-[48px] cursor-pointer rounded-full bg-bg-light transition-colors duration-300 ease-in-out hover:bg-highlight"
             ></div>
             <div className="flex h-[32px] w-full flex-col">
@@ -99,7 +102,9 @@ export default function SearchPage() {
           className={`${
             isResultPage ? 'w-0' : 'w-[20%]'
           } h-full overflow-hidden transition-all duration-300 ease-in-out`}
-        ></div>
+        >
+          <SearchHistory />
+        </div>
 
         <div className="relative mb-[16px] mr-[16px] flex h-full w-full flex-col items-center justify-center overflow-hidden rounded-[8px] bg-bg transition-colors duration-500">
           {/* Conteúdo da pesquisa */}

@@ -25,15 +25,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const location = useLocation()
 
   useEffect(() => {
-    const publicRoutes = ['/results']
-
-    if (publicRoutes.includes(location.pathname)) {
-      navigate('/search')
-      return
-    } else {
-      return
-    }
-
     async function validateUser() {
       const storedUser = localStorage.getItem('user')
       if (storedUser) {
@@ -43,7 +34,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         try {
           await me(parsedUser.access_token)
         } catch (error) {
-          // Token inválido, remove e limpa usuário
+          // Token inválido
           localStorage.removeItem('user')
           setUser(null)
         }
@@ -54,21 +45,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     validateUser()
   }, [])
 
+  // ✅ Faz redirecionamentos separados
+  useEffect(() => {
+    if (loading) return
+
+    const publicRoutes = ['/login', '/results']
+    if (publicRoutes.includes(location.pathname) && user) {
+      // Já está logado → manda pra /search
+      navigate('/search', { replace: true })
+    }
+    if (!user && !publicRoutes.includes(location.pathname)) {
+      // Não logado e tentando acessar rota privada → manda pra /login
+      navigate('/login', { replace: true })
+    }
+  }, [location.pathname, user, loading, navigate])
+
   async function me(access_token: string) {
     const meRes = await fetch(`${environments.backendUrl}/auth/me`, {
       headers: { Authorization: `Bearer ${access_token}` }
     })
+
+    if (!meRes.ok) throw new Error('Token inválido')
 
     const meData = await meRes.json()
 
     const newUser: User = {
       full_name: meData.full_name,
       email: meData.email,
-      access_token: access_token
+      access_token
     }
 
+    // Apenas seta no estado
     setUser(newUser)
-    localStorage.setItem('user', JSON.stringify(newUser))
+
+    return newUser
   }
 
   // Função de login
@@ -83,7 +93,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const data = await res.json()
 
-    me(data.access_token)
+    const newUser = await me(data.access_token) // valida e pega dados
+    localStorage.setItem('user', JSON.stringify(newUser)) // só aqui grava
   }
 
   // Função de registro
@@ -93,13 +104,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ full_name, email, password })
     })
+
     if (!res.ok) throw new Error('Registration failed')
 
-    const data = await res.json()
-
-    console.log(data.access_token)
-
-    login(email, password)
+    // depois de registrar, já loga
+    await login(email, password)
   }
 
   // Logout
