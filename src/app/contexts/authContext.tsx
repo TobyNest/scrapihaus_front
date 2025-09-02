@@ -3,6 +3,7 @@ import { createContext, useContext, useState, useEffect } from 'react'
 import { User } from '../types/user'
 import { environments } from '@/utils/env/enviroments'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useSearch } from './searchContext'
 
 type AuthContextType = {
   user: User | null
@@ -23,18 +24,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
   const location = useLocation()
+  const { fetchMySearches } = useSearch()
 
+  // Valida usuário salvo no localStorage
   useEffect(() => {
     async function validateUser() {
       const storedUser = localStorage.getItem('user')
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser)
-        setUser(parsedUser)
-
         try {
-          await me(parsedUser.access_token)
-        } catch (error) {
-          // Token inválido
+          const validUser = await me(parsedUser.access_token)
+          setUser(validUser) // apenas atualiza estado
+        } catch {
           localStorage.removeItem('user')
           setUser(null)
         }
@@ -45,22 +46,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     validateUser()
   }, [])
 
-  // ✅ Faz redirecionamentos separados
+  // Redireciona se estiver logado em rota pública
   useEffect(() => {
     if (loading) return
 
-    const publicRoutes = ['/login', '/results']
+    const publicRoutes = ['/', '/login', '/results']
     if (publicRoutes.includes(location.pathname) && user) {
-      // Já está logado → manda pra /search
       navigate('/search', { replace: true })
-    }
-    if (!user && !publicRoutes.includes(location.pathname)) {
-      // Não logado e tentando acessar rota privada → manda pra /login
-      navigate('/login', { replace: true })
     }
   }, [location.pathname, user, loading, navigate])
 
-  async function me(access_token: string) {
+  // Função que valida token no backend
+  async function me(access_token: string): Promise<User> {
     const meRes = await fetch(`${environments.backendUrl}/auth/me`, {
       headers: { Authorization: `Bearer ${access_token}` }
     })
@@ -69,16 +66,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const meData = await meRes.json()
 
-    const newUser: User = {
+    if (fetchMySearches) {
+      fetchMySearches(access_token) // <- aqui passa o token
+    }
+
+    return {
       full_name: meData.full_name,
       email: meData.email,
       access_token
     }
-
-    // Apenas seta no estado
-    setUser(newUser)
-
-    return newUser
   }
 
   // Função de login
@@ -93,8 +89,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const data = await res.json()
 
-    const newUser = await me(data.access_token) // valida e pega dados
-    localStorage.setItem('user', JSON.stringify(newUser)) // só aqui grava
+    const newUser = await me(data.access_token) // valida
+    setUser(newUser)
+    localStorage.setItem('user', JSON.stringify(newUser)) // grava no storage
   }
 
   // Função de registro
