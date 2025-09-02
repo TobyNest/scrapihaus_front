@@ -79,7 +79,7 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
       const query = new URLSearchParams(filteredParams).toString()
 
       const response = await fetch(
-        `${environments.backendUrl}housings/?${query}`,
+        `${environments.backendUrl}/housings/?${query}`,
         {
           method: 'GET'
         }
