@@ -1,3 +1,4 @@
+import { useAuth } from '@/app/contexts/authContext'
 import { useSearch } from '@/app/contexts/searchContext'
 import { bairrosSP } from '@/utils/listaBairros/listaBairrosSp'
 import {
@@ -26,6 +27,7 @@ export default function SearchSection({
   } = useSearch()
 
   const navigate = useNavigate()
+  const {user} = useAuth()
 
   return (
     <div className="flex min-h-[240px] w-[712px] flex-col justify-between gap-[8px] font-roboto">
@@ -33,7 +35,14 @@ export default function SearchSection({
         className={` ${variant == 'search' ? 'border border-bg-light bg-bg-dark' : ''} flex min-h-[123px] w-full flex-col rounded-[4px] bg-bg bg-opacity-60 px-[24px] py-[16px] transition-colors duration-500`}
       >
         <div className="flex h-full w-full flex-col gap-[24px]">
-          <BairroTagSearch setBairros={updateField.bind(null, 'bairros')} />
+          <BairroTagSearch
+            setBairros={(bairros: string[] | undefined) =>
+              updateField(
+                'bairros',
+                bairros || undefined // passa undefined se estiver vazio
+              )
+            }
+          />
 
           <div className="flex h-[24px] w-full flex-row justify-between gap-[16px]">
             <NumberSelector
@@ -68,7 +77,7 @@ export default function SearchSection({
       </div>
       <div
         onClick={() => {
-          buscarHousings(searchParams)
+          buscarHousings(searchParams, user)
           setIsResultPage(true)
           navigate('/search')
         }}
@@ -192,7 +201,7 @@ export function NumberSelector({
 export function BairroTagSearch({
   setBairros
 }: {
-  setBairros: (value: string | number | string[] | undefined) => void
+  setBairros: (value: string[] | undefined) => void
 }) {
   const [query, setQuery] = useState('')
   const [selected, setSelected] = useState<string[]>([])
@@ -234,18 +243,20 @@ export function BairroTagSearch({
 
   const addBairro = (bairro: string) => {
     if (!selected.includes(bairro) && bairro.length > 0) {
-      setSelected([...selected, bairro])
+      const newSelected = [...selected, bairro]
+      setSelected(newSelected)
+      if (setBairros) setBairros(newSelected)
     }
     setQuery('')
     setFiltered([])
     setActiveIndex(-1)
-    if (setBairros) setBairros([...selected, bairro])
     inputRef.current?.focus()
   }
 
   const removeBairro = (bairro: string) => {
-    setSelected((prev) => prev.filter((b) => b !== bairro))
-    if (setBairros) setBairros(selected.filter((b) => b !== bairro))
+    const newSelected = selected.filter((b) => b !== bairro)
+    setSelected(newSelected)
+    if (setBairros) setBairros(newSelected)
   }
 
   return (

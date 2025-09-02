@@ -4,6 +4,7 @@ import { Housing } from '../types/housing'
 import { SearchParams } from '../types/searchParams'
 import { environments } from '@/utils/env/enviroments'
 import { HousingHistory } from '../types/history'
+import { User } from '../types/user'
 
 type SearchController = {
   housings: Housing[]
@@ -18,7 +19,7 @@ type SearchController = {
   ) => void
   handleTypeChange: (index: number) => void
   setSearchParams: React.Dispatch<React.SetStateAction<SearchParams>>
-  buscarHousings: (params: SearchParams) => Promise<void>
+  buscarHousings: (params: SearchParams, user: User | null) => Promise<void>
   fetchMySearches: (access_token: string) => Promise<void>
   isResultPage?: boolean
   setIsResultPage: React.Dispatch<React.SetStateAction<boolean>>
@@ -65,23 +66,37 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
   }
 
   // 🔍 pesquisa de imóveis
-  async function buscarHousings(params: SearchParams) {
+  async function buscarHousings(params: SearchParams, user: User | null) {
     setLoading(true)
     setError(null)
 
     try {
-      const filteredParams = Object.fromEntries(
-        Object.entries(params)
-          .filter(([_, v]) => v !== undefined && v !== null && v !== '')
-          .map(([key, value]) => [key, String(value)])
+      // Filtra apenas os parâmetros válidos
+      const filteredParams: Record<string, any> = Object.fromEntries(
+        Object.entries(params).filter(
+          ([_, v]) => v !== undefined && v !== null && v !== ''
+        )
       )
 
-      const query = new URLSearchParams(filteredParams).toString()
+      // Constrói a query string
+      const query = new URLSearchParams()
+
+      for (const [key, value] of Object.entries(filteredParams)) {
+        if (key === 'bairros' && Array.isArray(value)) {
+          value.forEach((bairro) => query.append('bairro', bairro))
+        } else {
+          query.append(key, String(value))
+        }
+      }
 
       const response = await fetch(
-        `${environments.backendUrl}/housings/?${query}`,
+        `${environments.backendUrl}/housings/?${query.toString()}`,
         {
-          method: 'GET'
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(user ? { Authorization: `Bearer ${user.access_token}` } : {})
+          }
         }
       )
 

@@ -3,7 +3,6 @@ import { createContext, useContext, useState, useEffect } from 'react'
 import { User } from '../types/user'
 import { environments } from '@/utils/env/enviroments'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useSearch } from './searchContext'
 
 type AuthContextType = {
   user: User | null
@@ -24,7 +23,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
   const location = useLocation()
-  const { fetchMySearches } = useSearch()
 
   // Valida usuário salvo no localStorage
   useEffect(() => {
@@ -65,10 +63,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!meRes.ok) throw new Error('Token inválido')
 
     const meData = await meRes.json()
-
-    if (fetchMySearches) {
-      fetchMySearches(access_token) // <- aqui passa o token
-    }
 
     return {
       full_name: meData.full_name,
