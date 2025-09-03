@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useAuth } from '../contexts/authContext'
 import SearchSection from '../components/home/search'
 import ThemeToggle from '../components/home/themeToggle'
@@ -11,19 +11,41 @@ import { useNavigate } from 'react-router-dom'
 import SearchHistory from '../components/searchPage/searchHistory'
 
 export default function SearchPage() {
-  const { isResultPage, setIsResultPage, housings, searches, fetchMySearches } = useSearch()
-  const { user } = useAuth()
+  const { isResultPage, setIsResultPage, housings, searches, fetchMySearches } =
+    useSearch()
+  const { user, loading } = useAuth()
   const navigate = useNavigate()
-
-
+  const [showPage, setShowPage] = useState(false)
 
   const searchContentRef = useRef(null)
   const resultsContentRef = useRef(null)
 
-  useEffect(() =>{
-    if (user) {
-      fetchMySearches(user.access_token)
+  useEffect(() => {
+    if (!user) return // só chama se tiver usuário
+
+    let timeout: NodeJS.Timeout
+
+    const fetchAndShow = async () => {
+      const start = Date.now()
+
+      await fetchMySearches(user.access_token) // pega o histórico
+      const elapsed = Date.now() - start
+
+      const minTime = 1000 // tempo mínimo de loading
+      const remaining = minTime - elapsed
+
+      if (remaining > 0) {
+        await new Promise<void>((res) => {
+          timeout = setTimeout(res, remaining)
+        })
+      }
+
+      setShowPage(true) // só seta depois do fetch e do delay
     }
+
+    fetchAndShow()
+
+    return () => clearTimeout(timeout) // cleanup
   }, [user])
 
   useEffect(() => {
@@ -105,13 +127,13 @@ export default function SearchPage() {
         </div>
       </div>
 
-      <div className="flex h-[94%] w-full flex-row pb-[16px] pl-[16px] overflow-hidden">
+      <div className="flex h-[94%] w-full flex-row overflow-hidden pb-[16px] pl-[16px]">
         <div
           className={`${
             isResultPage ? 'w-0' : 'w-[20%]'
           } h-full overflow-hidden transition-all duration-300 ease-in-out`}
         >
-          <SearchHistory searches={searches} user={user} />
+          <SearchHistory loading={!showPage} searches={searches} user={user} />
         </div>
 
         <div className="relative mb-[16px] mr-[16px] flex h-full w-full flex-col items-center justify-center overflow-hidden rounded-[8px] bg-bg transition-colors duration-500">
@@ -143,7 +165,7 @@ export default function SearchPage() {
             ref={resultsContentRef}
             className="hidden h-full w-full flex-col items-center justify-center overflow-hidden"
           >
-            <div className="flex h-full w-full flex-col items-center justify-start gap-[16px] p-[16px] pt-[32px] overflow-hidden">
+            <div className="flex h-full w-full flex-col items-center justify-start gap-[16px] overflow-hidden p-[16px] pt-[32px]">
               <HousingTable housings={housings} />
             </div>
           </div>
