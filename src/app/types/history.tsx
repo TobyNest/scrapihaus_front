@@ -1,7 +1,7 @@
 export type HousingHistory = {
   tipo: string
   quartos?: number
-  bairro?: string
+  bairro?: string[]
   banheiros?: number
   vagas_garagem?: number
   area_min?: number

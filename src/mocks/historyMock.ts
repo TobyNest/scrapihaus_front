@@ -7,7 +7,7 @@ export const historyMock: HousingHistory[] = [
     banheiros: 1,
     vagas_garagem: 1,
     data_pesquisa: new Date('2025-08-01T10:30:00Z'),
-    bairro: 'Vila Sônia',
+    bairro: ['Vila Sônia', 'Bom Retiro', 'Alto de Pinheiros', "Barra Funda", "Consolação"],
     area_max: 20,
     area_min: 40
   },
@@ -23,7 +23,7 @@ export const historyMock: HousingHistory[] = [
   {
     tipo: 'Terreno/Lote',
     data_pesquisa: new Date('2025-07-20T08:00:00Z'),
-    bairro: 'Bom Retiro',
+    bairro: ['Bom Retiro'],
     area_max: 120,
     area_min: 140
   },
@@ -41,7 +41,7 @@ export const historyMock: HousingHistory[] = [
     tipo: 'Apartamento',
     vagas_garagem: 1,
     data_pesquisa: new Date('2025-07-05T18:20:00Z'),
-    bairro: 'Pinheiros'
+    bairro: ['Pinheiros', 'Alto de Pinheiros']
   },
   {
     tipo: 'Casa',
