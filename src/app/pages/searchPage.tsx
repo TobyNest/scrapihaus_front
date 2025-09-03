@@ -9,11 +9,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { useNavigate } from 'react-router-dom'
 import SearchHistory from '../components/searchPage/searchHistory'
+import HelloSection from '../components/searchPage/helloSection'
 
 export default function SearchPage() {
   const { isResultPage, setIsResultPage, housings, searches, fetchMySearches } =
     useSearch()
-  const { user, loading } = useAuth()
+  const { user } = useAuth()
   const navigate = useNavigate()
   const [showPage, setShowPage] = useState(false)
 
@@ -140,24 +141,14 @@ export default function SearchPage() {
           {/* Conteúdo da pesquisa */}
           <div
             ref={searchContentRef}
-            className="flex flex-col items-center justify-center gap-[64px]"
+            className="flex w-full flex-col items-center justify-center gap-[64px]"
           >
-            <div className="inline-flex w-min flex-col whitespace-nowrap">
-              <h1 className="font-roboto text-[48px] font-bold">
-                Olá{' '}
-                <span
-                  onClick={() => setIsResultPage(true)}
-                  className="cursor-pointer text-border transition-all duration-150 ease-in-out hover:underline"
-                >
-                  {user?.full_name.split(' ')[0] || 'Usuario'}
-                </span>
-                !
-              </h1>
-              <h1 className="font-roboto text-[48px] font-regular text-text-muted">
-                O que está procurando hoje?
-              </h1>
-            </div>
-            <SearchSection variant="search" />
+            <HelloSection
+              user={user}
+              setIsResultPage={setIsResultPage}
+              loading={showPage}
+            />
+            <SearchSection variant="search" showPage={showPage} />
           </div>
 
           {/* Conteúdo de resultados */}

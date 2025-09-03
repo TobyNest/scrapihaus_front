@@ -13,9 +13,11 @@ import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export default function SearchSection({
-  variant = 'search'
+  variant = 'search',
+  showPage
 }: {
   variant?: 'search' | 'home'
+  showPage: boolean
 }) {
   const {
     handleTypeChange,
@@ -27,7 +29,11 @@ export default function SearchSection({
   } = useSearch()
 
   const navigate = useNavigate()
-  const {user} = useAuth()
+  const { user } = useAuth()
+
+  if (!showPage) {
+    return null
+  }
 
   return (
     <div className="flex min-h-[240px] w-[712px] flex-col justify-between gap-[8px] font-roboto">
