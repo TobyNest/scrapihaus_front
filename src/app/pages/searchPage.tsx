@@ -97,7 +97,7 @@ export default function SearchPage() {
         </div>
       </div>
 
-      <div className="flex h-[94%] w-full flex-row pb-[16px] pl-[16px]">
+      <div className="flex h-[94%] w-full flex-row pb-[16px] pl-[16px] overflow-hidden">
         <div
           className={`${
             isResultPage ? 'w-0' : 'w-[20%]'
@@ -133,9 +133,9 @@ export default function SearchPage() {
           {/* Conteúdo de resultados */}
           <div
             ref={resultsContentRef}
-            className="hidden h-full w-full flex-col items-center justify-center"
+            className="hidden h-full w-full flex-col items-center justify-center overflow-hidden"
           >
-            <div className="flex h-full w-full flex-col items-center justify-start gap-[16px] p-[16px] pt-[32px]">
+            <div className="flex h-full w-full flex-col items-center justify-start gap-[16px] p-[16px] pt-[32px] overflow-hidden">
               <HousingTable housings={housings} />
             </div>
           </div>
