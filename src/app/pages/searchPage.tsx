@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useAuth } from '../contexts/authContext'
 import SearchSection from '../components/home/search'
 import ThemeToggle from '../components/home/themeToggle'
@@ -12,10 +12,10 @@ import SearchHistory from '../components/searchPage/searchHistory'
 
 export default function SearchPage() {
   const { isResultPage, setIsResultPage, housings, searches, fetchMySearches } = useSearch()
-  const { user } = useAuth()
+  const { user, loading } = useAuth()
   const navigate = useNavigate()
 
-
+  const [showLoadingScreen, setShowLoadingScreen] = useState(true)
 
   const searchContentRef = useRef(null)
   const resultsContentRef = useRef(null)
@@ -25,6 +25,14 @@ export default function SearchPage() {
       fetchMySearches(user.access_token)
     }
   }, [user])
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout
+
+    if(!loading) {
+      timeout = setTimeout(()=> setShowLoadingScreen(false),800)
+    }
+  }, [loading])
 
   useEffect(() => {
     if (isResultPage) {
@@ -60,95 +68,100 @@ export default function SearchPage() {
     }
   }, [isResultPage])
 
-  return (
-    <div className="relative flex h-screen w-screen flex-col items-center justify-start bg-bg-dark text-text transition-colors duration-500">
-      <div className="flex h-[90px] min-h-[88px] w-full flex-shrink-0 flex-row">
-        <div className="flex h-full w-[20%] items-center justify-center font-roboto">
-          <div className="flex h-[32px] w-full flex-row gap-[8px] pl-[16px]">
+  if (!showLoadingScreen) {
+    return (
+      
+      <div className="relative flex h-screen w-screen flex-col items-center justify-start bg-bg-dark text-text transition-colors duration-500">
+        <div className="flex h-[90px] min-h-[88px] w-full flex-shrink-0 flex-row">
+          <div className="flex h-full w-[20%] items-center justify-center font-roboto">
+            <div className="flex h-[32px] w-full flex-row gap-[8px] pl-[16px]">
+              <div
+                onClick={() => {
+                  !user ? navigate('/login') : navigate('/profile')
+                }}
+                className="h-[40px] w-[48px] cursor-pointer rounded-full bg-bg-light transition-colors duration-300 ease-in-out hover:bg-highlight"
+              ></div>
+              <div className="flex h-[32px] w-full flex-col">
+                <h1 className="text-[16px] font-bold text-text">
+                  {user?.full_name || 'Nome usuario'}
+                </h1>
+                <h1 className="text-[12px] font-extralight text-text-muted">
+                  {user?.email || 'email@email.com'}
+                </h1>
+              </div>
+            </div>
+          </div>
+          <div className="flex h-full w-full flex-row items-center justify-between pr-[16px] text-[24px] font-semibold">
+            <div className="flex flex-row gap-[16px]">
+              <h1
+                onClick={() => {
+                  if (isResultPage) setIsResultPage(false)
+                }}
+                className={`${isResultPage ? 'cursor-pointer underline' : ''} `}
+              >
+                Pesquisa
+              </h1>
+              <h1
+                className={`${isResultPage ? '' : 'hidden'} bg flex flex-row items-center justify-center gap-[16px] transition-all duration-150 ease-in-out`}
+              >
+                <FontAwesomeIcon
+                  icon={faArrowRight}
+                  className="mt-1 text-[16px] text-border"
+                />
+                <h1>Resultados</h1>
+              </h1>
+            </div>
+            <ThemeToggle />
+          </div>
+        </div>
+  
+        <div className="flex h-[94%] w-full flex-row pb-[16px] pl-[16px] overflow-hidden">
+          <div
+            className={`${
+              isResultPage ? 'w-0' : 'w-[20%]'
+            } h-full overflow-hidden transition-all duration-300 ease-in-out`}
+          >
+            <SearchHistory searches={searches} user={user} />
+          </div>
+  
+          <div className="relative mb-[16px] mr-[16px] flex h-full w-full flex-col items-center justify-center overflow-hidden rounded-[8px] bg-bg transition-colors duration-500">
+            {/* Conteúdo da pesquisa */}
             <div
-              onClick={() => {
-                !user ? navigate('/login') : navigate('/profile')
-              }}
-              className="h-[40px] w-[48px] cursor-pointer rounded-full bg-bg-light transition-colors duration-300 ease-in-out hover:bg-highlight"
-            ></div>
-            <div className="flex h-[32px] w-full flex-col">
-              <h1 className="text-[16px] font-bold text-text">
-                {user?.full_name || 'Nome usuario'}
-              </h1>
-              <h1 className="text-[12px] font-extralight text-text-muted">
-                {user?.email || 'email@email.com'}
-              </h1>
-            </div>
-          </div>
-        </div>
-        <div className="flex h-full w-full flex-row items-center justify-between pr-[16px] text-[24px] font-semibold">
-          <div className="flex flex-row gap-[16px]">
-            <h1
-              onClick={() => {
-                if (isResultPage) setIsResultPage(false)
-              }}
-              className={`${isResultPage ? 'cursor-pointer underline' : ''} `}
+              ref={searchContentRef}
+              className="flex flex-col items-center justify-center gap-[64px]"
             >
-              Pesquisa
-            </h1>
-            <h1
-              className={`${isResultPage ? '' : 'hidden'} bg flex flex-row items-center justify-center gap-[16px] transition-all duration-150 ease-in-out`}
-            >
-              <FontAwesomeIcon
-                icon={faArrowRight}
-                className="mt-1 text-[16px] text-border"
-              />
-              <h1>Resultados</h1>
-            </h1>
-          </div>
-          <ThemeToggle />
-        </div>
-      </div>
-
-      <div className="flex h-[94%] w-full flex-row pb-[16px] pl-[16px] overflow-hidden">
-        <div
-          className={`${
-            isResultPage ? 'w-0' : 'w-[20%]'
-          } h-full overflow-hidden transition-all duration-300 ease-in-out`}
-        >
-          <SearchHistory searches={searches} user={user} />
-        </div>
-
-        <div className="relative mb-[16px] mr-[16px] flex h-full w-full flex-col items-center justify-center overflow-hidden rounded-[8px] bg-bg transition-colors duration-500">
-          {/* Conteúdo da pesquisa */}
-          <div
-            ref={searchContentRef}
-            className="flex flex-col items-center justify-center gap-[64px]"
-          >
-            <div className="inline-flex w-min flex-col whitespace-nowrap">
-              <h1 className="font-roboto text-[48px] font-bold">
-                Olá{' '}
-                <span
-                  onClick={() => setIsResultPage(true)}
-                  className="cursor-pointer text-border transition-all duration-150 ease-in-out hover:underline"
-                >
-                  {user?.full_name.split(' ')[0] || 'Usuario'}
-                </span>
-                !
-              </h1>
-              <h1 className="font-roboto text-[48px] font-regular text-text-muted">
-                O que está procurando hoje?
-              </h1>
+              <div className="inline-flex w-min flex-col whitespace-nowrap">
+                <h1 className="font-roboto text-[48px] font-bold">
+                  Olá{' '}
+                  <span
+                    onClick={() => setIsResultPage(true)}
+                    className="cursor-pointer text-border transition-all duration-150 ease-in-out hover:underline"
+                  >
+                    {user?.full_name.split(' ')[0] || 'Usuario'}
+                  </span>
+                  !
+                </h1>
+                <h1 className="font-roboto text-[48px] font-regular text-text-muted">
+                  O que está procurando hoje?
+                </h1>
+              </div>
+              <SearchSection variant="search" />
             </div>
-            <SearchSection variant="search" />
-          </div>
-
-          {/* Conteúdo de resultados */}
-          <div
-            ref={resultsContentRef}
-            className="hidden h-full w-full flex-col items-center justify-center overflow-hidden"
-          >
-            <div className="flex h-full w-full flex-col items-center justify-start gap-[16px] p-[16px] pt-[32px] overflow-hidden">
-              <HousingTable housings={housings} />
+  
+            {/* Conteúdo de resultados */}
+            <div
+              ref={resultsContentRef}
+              className="hidden h-full w-full flex-col items-center justify-center overflow-hidden"
+            >
+              <div className="flex h-full w-full flex-col items-center justify-start gap-[16px] p-[16px] pt-[32px] overflow-hidden">
+                <HousingTable housings={housings} />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  )
+    ) 
+  } else {
+    return <div className='w-screen h-screen bg-red-500 z-99'></div>
+  }
 }
