@@ -5,7 +5,7 @@ import {
   faBuilding
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useState } from 'react'
+// import { useState } from 'react'
 
 export default function SearchHistory({
   searches,
@@ -23,7 +23,7 @@ export default function SearchHistory({
         {user ? (
           searches.length > 0 ? (
             searches.map((search, index) => (
-              <HistoryCard info={search} index={index} key={index} />
+              <HistoryCard info={search} key={index} />
             ))
           ) : (
             <h1> Não há pesquisas recentes...</h1>
@@ -37,13 +37,11 @@ export default function SearchHistory({
 }
 
 export function HistoryCard({
-  info,
-  index
+  info
 }: {
   info: HousingHistory
-  index: number
 }) {
-  const [isActive, setIsActive] = useState(false)
+  // const [isActive, setIsActive] = useState(false)
   const date = new Date(info.data_pesquisa)
   const formatedDate = date.toLocaleDateString('pt-BR', {
     day: '2-digit',

@@ -9,15 +9,22 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { useNavigate } from 'react-router-dom'
 import SearchHistory from '../components/searchPage/searchHistory'
-import { historyMock } from '@/mocks/historyMock'
 
 export default function SearchPage() {
-  const { isResultPage, setIsResultPage, housings, searches } = useSearch()
+  const { isResultPage, setIsResultPage, housings, searches, fetchMySearches } = useSearch()
   const { user } = useAuth()
   const navigate = useNavigate()
 
+
+
   const searchContentRef = useRef(null)
   const resultsContentRef = useRef(null)
+
+  useEffect(() =>{
+    if (user) {
+      fetchMySearches(user.access_token)
+    }
+  }, [user])
 
   useEffect(() => {
     if (isResultPage) {
@@ -104,7 +111,7 @@ export default function SearchPage() {
             isResultPage ? 'w-0' : 'w-[20%]'
           } h-full overflow-hidden transition-all duration-300 ease-in-out`}
         >
-          <SearchHistory searches={historyMock} user={user} />
+          <SearchHistory searches={searches} user={user} />
         </div>
 
         <div className="relative mb-[16px] mr-[16px] flex h-full w-full flex-col items-center justify-center overflow-hidden rounded-[8px] bg-bg transition-colors duration-500">

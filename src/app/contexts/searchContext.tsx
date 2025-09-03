@@ -35,13 +35,13 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
 
   const [isResultPage, setIsResultPage] = useState(false)
 
-  // 🔎 estados que estavam no componente
+
   const [searchParams, setSearchParams] = useState<SearchParams>({
     tipo: 'Casa' // valor padrão
   })
   const [selectedOption, setSelectedOption] = useState<number>(0)
 
-  // Atualiza qualquer campo de SearchParams
+
   const updateField = <K extends keyof SearchParams>(
     key: K,
     value: SearchParams[K]
@@ -65,7 +65,6 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
     }))
   }
 
-  // 🔍 pesquisa de imóveis
   async function buscarHousings(params: SearchParams, user: User | null) {
     setLoading(true)
     setError(null)
@@ -112,7 +111,6 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  // 🔁 histórico de buscas
   async function fetchMySearches(access_token: string) {
     setLoading(true)
     setError(null)
@@ -120,13 +118,28 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
     try {
       const res = await fetch(`${environments.backendUrl}/my-searches`, {
         method: 'GET',
-        headers: { Authorization: `Bearer ${access_token}` }
+        headers: access_token ? { Authorization: `Bearer ${access_token}` } : undefined
       })
 
       if (!res.ok) throw new Error('Erro ao buscar histórico')
 
-      const data: HousingHistory[] = await res.json()
-      setSearches(data)
+      const data = await res.json()
+
+      const mapped: HousingHistory[] = data.map((item:any) => (
+        {
+          tipo: item.search_params.tipo,
+          quartos: item.search_params.quartos,
+          banheiros: item.search_params.banheiros,
+          vagas_garagem: item.search_params.vagas_garagem,
+          area_min: item.search_params.area_min,
+          area_max: item.search_params.area_max,
+          bairro: Array.isArray(item.search_params.bairro) ? item.search_params.bairro : [item.search_params.bairro],
+          data_pesquisa: new Date(item.timestamp)
+
+        }
+      ))
+
+      setSearches(mapped)
     } catch (err: any) {
       setError(err.message || 'Erro desconhecido')
       setSearches([])
