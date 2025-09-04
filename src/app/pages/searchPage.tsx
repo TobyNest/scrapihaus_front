@@ -15,7 +15,7 @@ import UserDetails from '../components/searchPage/userDetails'
 export default function SearchPage() {
   const { isResultPage, setIsResultPage, housings, searches, fetchMySearches } =
     useSearch()
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const navigate = useNavigate()
   const [showPage, setShowPage] = useState(false)
 
@@ -88,7 +88,7 @@ export default function SearchPage() {
     <div className="relative flex h-screen w-screen flex-col items-center justify-start bg-bg-dark text-text transition-colors duration-500">
       <div className="flex h-[90px] min-h-[88px] w-full flex-shrink-0 flex-row">
         <div className="flex h-full w-[20%] items-center justify-center font-roboto">
-          <UserDetails user={user} />
+          <UserDetails user={user} logout={logout} />
         </div>
         <div className="flex h-full w-full flex-row items-center justify-between pr-[16px] text-[24px] font-semibold">
           <div className="flex flex-row gap-[16px]">
@@ -117,7 +117,7 @@ export default function SearchPage() {
       <div className="flex h-[94%] w-full flex-row overflow-hidden pb-[16px] pl-[16px]">
         <div
           className={`${
-            isResultPage ? 'w-0' : 'w-[20%]'
+            isResultPage || !user ? 'w-0' : 'w-[20%]'
           } h-full overflow-hidden transition-all duration-300 ease-in-out`}
         >
           <SearchHistory loading={!showPage} searches={searches} user={user} />

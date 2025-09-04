@@ -31,7 +31,7 @@ export default function SearchSection({
   const navigate = useNavigate()
   const { user } = useAuth()
 
-  if (!showPage) {
+  if (!showPage && user) {
     return null
   }
 
