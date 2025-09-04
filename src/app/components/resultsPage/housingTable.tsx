@@ -1,11 +1,12 @@
 import { Housing } from '@/app/types/housing'
 import { CellType } from '@/utils/env/cellTypeEnum'
-import { faSquareArrowUpRight } from '@fortawesome/free-solid-svg-icons'
+import {
+  faSearch,
+  faSquareArrowUpRight
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
-interface HousingListProps {
-  housings: Housing[]
-}
+import saveAs from 'file-saver'
+import * as XLSX from 'xlsx'
 
 const TableInfoTitle = [
   { titulo: 'Nº', flex: 1 },
@@ -24,28 +25,77 @@ const TableInfoTitle = [
   { titulo: 'Link', flex: 2 }
 ]
 
-export default function HousingTable({ housings }: HousingListProps) {
+export default function HousingTable({
+  housings,
+  setIsResultPage
+}: {
+  housings: Housing[]
+  setIsResultPage: (isResultPage: boolean) => void
+}) {
   return (
-    <div className="h-full w-full rounded-t-xl bg-bg-dark text-sm transition-all duration-150 ease-in-out">
-      <div className="flex h-10 w-full flex-row justify-between overflow-hidden rounded-t-xl">
-        {TableInfoTitle.map((title) => (
+    <div className="text-roboto flex h-full w-full flex-col gap-[16px] overflow-hidden">
+      <div className="flex w-full flex-row justify-between gap-[16px]">
+        <div className="flex flex-row gap-[16px]">
           <div
-            style={{ flex: title.flex }}
-            className={`flex h-full items-center justify-start overflow-hidden border border-r-0 border-bg bg-bg-60 font-semibold last:border-r`}
+            onClick={() => setIsResultPage(false)}
+            className="h-[32px] cursor-pointer rounded-[4px] bg-border px-[8px] py-[4px] text-white"
           >
-            <div className="flex h-full w-full items-center justify-start pl-2">
-              {title.titulo}
+            Realizar outra pesquisa
+          </div>
+          <div className="flex h-[32px] flex-row items-center justify-between gap-[16px] rounded-[4px] bg-bg-dark px-[8px] py-[4px]">
+            <div className="flex flex-row">
+              <FontAwesomeIcon
+                icon={faSearch}
+                className="mr-[4px] mt-[4px] text-border"
+              />
+              <h1 className="text-text-muted">Resultado:</h1>
+            </div>
+            <div className="inline-flex w-full whitespace-nowrap font-bold text-text">
+              {housings.length - 1} linhas
             </div>
           </div>
-        ))}
+        </div>
+        <div
+          onClick={() => {
+            housings.length > 0 && exportToExcel(housings)
+          }}
+          className={`h-[32px] ${housings.length > 0 && 'hover:bg-border hover:text-white'} cursor-pointer rounded-[4px] bg-bg-light px-[8px] py-[4px] transition-all duration-150 ease-in-out`}
+        >
+          Exportar Excel
+        </div>
       </div>
-      <div className="hide-scrollbar h-full w-full overflow-y-scroll bg-bg-dark pb-14">
-        {housings.map((housing, index) => (
-          <HousingRow housing={housing} index={index} />
-        ))}
+      <div className="h-full w-full rounded-t-xl bg-bg-dark text-sm transition-all duration-150 ease-in-out">
+        <div className="flex h-10 w-full flex-row justify-between overflow-hidden rounded-t-xl">
+          {TableInfoTitle.map((title) => (
+            <div
+              style={{ flex: title.flex }}
+              className={`flex h-full items-center justify-start overflow-hidden border border-r-0 border-bg bg-bg-60 font-semibold last:border-r`}
+            >
+              <div className="flex h-full w-full items-center justify-start pl-2">
+                {title.titulo}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="hide-scrollbar h-full w-full overflow-y-scroll bg-bg-dark pb-14">
+          {housings.map((housing, index) => (
+            <HousingRow housing={housing} index={index} />
+          ))}
+        </div>
       </div>
     </div>
   )
+}
+
+export function exportToExcel(data: Housing[], fileName = 'dados.xlsx') {
+  const worksheet = XLSX.utils.json_to_sheet(data)
+  const workbook = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Dados')
+
+  const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' })
+  const blob = new Blob([excelBuffer], { type: 'application/octet-stream' })
+
+  saveAs(blob, fileName)
 }
 
 export function HousingRow({

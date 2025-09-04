@@ -143,7 +143,10 @@ export default function SearchPage() {
             className="hidden h-full w-full flex-col items-center justify-center overflow-hidden"
           >
             <div className="flex h-full w-full flex-col items-center justify-start gap-[16px] overflow-hidden p-[16px] pt-[32px]">
-              <HousingTable housings={housings} />
+              <HousingTable
+                housings={housings}
+                setIsResultPage={setIsResultPage}
+              />
             </div>
           </div>
         </div>
