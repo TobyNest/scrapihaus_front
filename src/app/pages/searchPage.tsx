@@ -10,6 +10,7 @@ import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { useNavigate } from 'react-router-dom'
 import SearchHistory from '../components/searchPage/searchHistory'
 import HelloSection from '../components/searchPage/helloSection'
+import UserDetails from '../components/searchPage/userDetails'
 
 export default function SearchPage() {
   const { isResultPage, setIsResultPage, housings, searches, fetchMySearches } =
@@ -87,22 +88,7 @@ export default function SearchPage() {
     <div className="relative flex h-screen w-screen flex-col items-center justify-start bg-bg-dark text-text transition-colors duration-500">
       <div className="flex h-[90px] min-h-[88px] w-full flex-shrink-0 flex-row">
         <div className="flex h-full w-[20%] items-center justify-center font-roboto">
-          <div className="flex h-[32px] w-full flex-row gap-[8px] pl-[16px]">
-            <div
-              onClick={() => {
-                !user ? navigate('/login') : navigate('/profile')
-              }}
-              className="h-[40px] w-[48px] cursor-pointer rounded-full bg-bg-light transition-colors duration-300 ease-in-out hover:bg-highlight"
-            ></div>
-            <div className="flex h-[32px] w-full flex-col">
-              <h1 className="text-[16px] font-bold text-text">
-                {user?.full_name || 'Nome usuario'}
-              </h1>
-              <h1 className="text-[12px] font-extralight text-text-muted">
-                {user?.email || 'email@email.com'}
-              </h1>
-            </div>
-          </div>
+          <UserDetails user={user} />
         </div>
         <div className="flex h-full w-full flex-row items-center justify-between pr-[16px] text-[24px] font-semibold">
           <div className="flex flex-row gap-[16px]">
