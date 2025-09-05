@@ -51,7 +51,7 @@ export default function HousingTable({
               <h1 className="text-text-muted">Resultado:</h1>
             </div>
             <div className="inline-flex w-full whitespace-nowrap font-bold text-text">
-              {housings.length - 1} linhas
+              {housings.length} linhas
             </div>
           </div>
         </div>
