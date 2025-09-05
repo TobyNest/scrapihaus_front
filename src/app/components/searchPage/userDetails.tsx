@@ -84,7 +84,7 @@ function LoggedMenu({
       </div>
       {isPopupOpen ? (
         <div className="text-roboto absolute left-0 top-0 z-[90] h-screen w-screen cursor-pointer">
-          <div className="absolute left-[8px] top-[8%] z-[99] flex w-[16%] flex-col gap-[8px] rounded-[8px] bg-bg-light px-[8px] py-[8px]">
+          <div className="absolute left-[16px] top-[8%] z-[99] flex w-[16%] flex-col gap-[8px] rounded-[8px] bg-bg-light px-[8px] py-[8px]">
             <MenuOption value={'Minha conta'} icon={faCircleUser} />
             <MenuOption value={'Fazer upgrade de plano'} icon={faWebAwesome} />
             <div className="h-[1px] w-full bg-bg"></div>
