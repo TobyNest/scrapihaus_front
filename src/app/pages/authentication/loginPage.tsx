@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 export default function LoginPage() {
   const navigate = useNavigate()
 
-  const { login } = useAuth()
+  const { login, loading } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -45,13 +45,9 @@ export default function LoginPage() {
           email={email}
           password={password}
           setPassword={setPassword}
+          handleSubmit= {handleSubmit}
         />
-        <div
-          onClick={handleSubmit}
-          className="flex h-[40px] w-[400px] cursor-pointer items-center justify-center rounded-[4px] bg-border text-[16px] font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-highlight"
-        >
-          Entrar
-        </div>
+        
       </div>
       <div className="pointer-events-none absolute right-[-200px] top-[-200px] h-[600px] w-[600px] rounded-full bg-border opacity-50 blur-[150px]"></div>
       <div className="pointer-events-none absolute bottom-[-200px] left-[-200px] h-[600px] w-[600px] rounded-full bg-border opacity-50 blur-[150px]"></div>
@@ -64,19 +60,22 @@ type LoginFormProps = {
   password: string
   setEmail: React.Dispatch<React.SetStateAction<string>>
   setPassword: React.Dispatch<React.SetStateAction<string>>
+  handleSubmit(): Promise<void>
 }
 
 export function LoginForm({
   email,
   password,
   setEmail,
-  setPassword
+  setPassword,
+  handleSubmit
 }: LoginFormProps) {
   return (
-    <div className="item-center flex h-[136px] w-full flex-col items-center justify-center gap-[8px] px-12 py-16">
+    <div className="item-center flex h-[200px]  w-full flex-col items-center justify-center  ">
+      <form onSubmit ={(e) => {e.preventDefault(); handleSubmit()}} className='w-full flex items-center justify-center flex-col gap-[16px]'>
       {['E-mail', 'Senha'].map((placeholder) => {
         return (
-          <form>
+          
             <input
               onChange={(e) =>
                 placeholder == 'E-mail'
@@ -89,9 +88,15 @@ export function LoginForm({
               placeholder={placeholder}
               key={placeholder}
             ></input>
-          </form>
         )
       })}
+      <button
+          
+          className="flex h-[40px] w-[400px] mt-[16px] cursor-pointer items-center justify-center rounded-[4px] bg-border text-[16px] font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-highlight"
+        >
+          Entrar
+        </button>
+        </form>
     </div>
   )
 }

@@ -48,13 +48,9 @@ export default function RegisterPage() {
           setEmail={setEmail}
           setFullName={setFullName}
           setPassword={setPassword}
+          handleSubmit={handleSubmit}
         />
-        <div
-          onClick={handleSubmit}
-          className="flex h-[40px] w-[400px] cursor-pointer items-center justify-center rounded-[4px] bg-border text-[16px] font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-highlight"
-        >
-          Registrar
-        </div>
+        
       </div>
       <div className="pointer-events-none absolute right-[-200px] top-[-200px] h-[600px] w-[600px] rounded-full bg-border opacity-50 blur-[150px]"></div>
       <div className="pointer-events-none absolute bottom-[-200px] left-[-200px] h-[600px] w-[600px] rounded-full bg-border opacity-50 blur-[150px]"></div>
@@ -69,6 +65,7 @@ type RegisterFormProps = {
   setEmail: React.Dispatch<React.SetStateAction<string>>
   setFullName: React.Dispatch<React.SetStateAction<string>>
   setPassword: React.Dispatch<React.SetStateAction<string>>
+  handleSubmit(): Promise<void>
 }
 
 export function RegisterForm({
@@ -77,13 +74,16 @@ export function RegisterForm({
   fullname,
   setFullName,
   setEmail,
-  setPassword
+  setPassword,
+  handleSubmit
 }: RegisterFormProps) {
   return (
-    <div className="item-center flex h-[192px] w-full flex-col items-center justify-center gap-[8px] px-12 py-16">
+    <div className="item-center flex h-[250px]  w-full flex-col items-center justify-center">
+      <form className='w-full flex flex-col gap-[16px] items-center justify-center' onSubmit={(e) => {e.preventDefault(); handleSubmit()}}>
+        
       {['Seu Nome', 'E-mail', 'Senha'].map((placeholder) => {
         return (
-          <form>
+          
             <input
               onChange={(e) =>
                 placeholder == 'E-mail'
@@ -104,9 +104,16 @@ export function RegisterForm({
               placeholder={placeholder}
               key={placeholder}
             ></input>
-          </form>
+          
         )
       })}
+      <button
+          
+          className="flex mt-[16px] h-[40px] w-[400px] cursor-pointer items-center justify-center rounded-[4px] bg-border text-[16px] font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-highlight"
+        >
+          Registrar
+        </button>
+      </form>
     </div>
   )
 }
