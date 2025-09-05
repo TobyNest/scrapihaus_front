@@ -20,7 +20,7 @@ export default function HomePage() {
             </h1>
           </div>
           <div className="0 flex h-1/2 w-full items-center justify-center">
-            <SearchSection variant='home' />
+            <SearchSection variant='home' showPage={true} />
           </div>
         </div>
       </div>

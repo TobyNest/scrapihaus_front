@@ -1,16 +1,13 @@
 import { useNavigate } from 'react-router-dom'
 import ThemeToggle from './themeToggle'
+import ScrapihausLogo from '../logo/scrapihauslogo'
 
 export default function NavBar() {
   const navigate = useNavigate()
 
   return (
-    <div className="sticky z-50 top-0 flex h-[56px] w-full flex-row items-center justify-between bg-transparent">
-      <div className="h-full w-[200px]">
-        <h1 className="m-0 flex h-full w-full items-center justify-start font-bold text-text">
-          SCRAPIHAUS
-        </h1>
-      </div>
+    <div className="sticky top-0 z-50 flex h-[56px] w-full flex-row items-center justify-between bg-transparent">
+      <ScrapihausLogo />
       <div className="flex h-full w-[400px] flex-row items-center justify-around font-light text-text">
         <h1>PESQUISAR</h1>
         <h1>SOBRE</h1>

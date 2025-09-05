@@ -13,9 +13,11 @@ import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export default function SearchSection({
-  variant = 'search'
+  variant = 'search',
+  showPage
 }: {
   variant?: 'search' | 'home'
+  showPage: boolean
 }) {
   const {
     handleTypeChange,
@@ -23,11 +25,16 @@ export default function SearchSection({
     selectedOption,
     buscarHousings,
     searchParams,
-    setIsResultPage
+    setIsResultPage,
+    loading
   } = useSearch()
 
   const navigate = useNavigate()
-  const {user} = useAuth()
+  const { user } = useAuth()
+
+  if (!showPage && user) {
+    return null
+  }
 
   return (
     <div className="flex min-h-[240px] w-[712px] flex-col justify-between gap-[8px] font-roboto">
@@ -76,14 +83,43 @@ export default function SearchSection({
         />
       </div>
       <div
-        onClick={() => {
-          buscarHousings(searchParams, user)
+        onClick={async () => {
+          if (loading) return 
+          try {
+             await buscarHousings(searchParams, user)
+          } catch {
+            
+          }
+         
           setIsResultPage(true)
           navigate('/search')
         }}
-        className="hover:bg-border-dark flex h-[40px] w-full items-center justify-center rounded-[4px] bg-border font-roboto text-sm font-medium text-white transition-all duration-150 ease-in-out hover:cursor-pointer"
+        className={`flex h-[40px] w-full items-center justify-center rounded-[4px] font-roboto text-sm font-medium text-white transition-all duration-150 ease-in-out ${loading ? 'bg-border-dark cursor-not-allowed opacity-80' : 'hover:bg-border-dark bg-border hover:cursor-pointer'}`}
       >
-        PESQUISAR
+        {loading ? (
+          <svg
+            className="h-5 w-5 animate-spin text-white"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+            />
+          </svg>
+        ) : (
+          'PESQUISAR'
+        )}
       </div>
     </div>
   )
