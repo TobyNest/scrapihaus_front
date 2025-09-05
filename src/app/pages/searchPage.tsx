@@ -7,7 +7,6 @@ import { useSearch } from '../contexts/searchContext'
 import HousingTable from '../components/resultsPage/housingTable'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
-import { useNavigate } from 'react-router-dom'
 import SearchHistory from '../components/searchPage/searchHistory'
 import HelloSection from '../components/searchPage/helloSection'
 import UserDetails from '../components/searchPage/userDetails'
@@ -16,7 +15,6 @@ export default function SearchPage() {
   const { isResultPage, setIsResultPage, housings, searches, fetchMySearches } =
     useSearch()
   const { user, logout } = useAuth()
-  const navigate = useNavigate()
   const [showPage, setShowPage] = useState(false)
 
   const searchContentRef = useRef(null)
@@ -87,7 +85,7 @@ export default function SearchPage() {
   return (
     <div className="relative flex h-screen w-screen flex-col items-center justify-start bg-bg-dark text-text transition-colors duration-500">
       <div className="flex h-[90px] min-h-[88px] w-full flex-shrink-0 flex-row">
-        <div className="flex h-full w-[20%] items-center justify-center font-roboto">
+        <div className="flex h-full w-[20%] items-center justify-start pl-[16px] font-roboto">
           <UserDetails user={user} logout={logout} />
         </div>
         <div className="flex h-full w-full flex-row items-center justify-between pr-[16px] text-[24px] font-semibold">

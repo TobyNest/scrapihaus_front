@@ -48,7 +48,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (loading) return
 
-    const publicRoutes = ['/', '/login', '/results']
+    const publicRoutes = ['/', '/login', '/results', '/register']
     if (publicRoutes.includes(location.pathname) && user) {
       navigate('/search', { replace: true })
     }
