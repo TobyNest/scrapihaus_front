@@ -23,7 +23,7 @@ export default function HelloSection({
         >
           {user?.full_name.split(' ')[0]}
         </span>
-        {user && 'Olá'}
+        {user && '!'}
       </h1>
       <h1 className="font-roboto text-[48px] font-regular text-text-muted">
         O que está procurando hoje?

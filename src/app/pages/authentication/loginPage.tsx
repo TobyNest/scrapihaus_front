@@ -1,4 +1,5 @@
 import ThemeToggle from '@/app/components/home/themeToggle'
+import ScrapihausLogo from '@/app/components/logo/scrapihauslogo'
 import { useAuth } from '@/app/contexts/authContext'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -24,12 +25,9 @@ export default function LoginPage() {
       <div className="absolute top-0 flex h-[48px] w-full items-center justify-end"></div>
       <div className="flex h-full w-full max-w-[684px] flex-col items-center justify-center gap-[32px]">
         <ThemeToggle />
-        <h1
-          onClick={() => navigate('/')}
-          className="m-0 flex h-min w-min items-center justify-start text-[24px] font-bold text-text hover:cursor-pointer hover:text-border"
-        >
-          SCRAPIHAUS
-        </h1>
+        <div onClick={() => navigate('/')} className="cursor-pointer">
+          <ScrapihausLogo />
+        </div>
         <div className="flex h-[64px] w-full flex-col items-center justify-center gap-[8px]">
           <h1 className="text-[32px] font-regular">Bom te ver por aqui!</h1>
           <h1 className="text-[16px] font-regular text-text-muted">
