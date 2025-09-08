@@ -124,6 +124,7 @@ export function LoginForm({
               key={placeholder}
             ></input>
             {errorMessage && (<span className='mt-1 text-sm text-red-500'>{errorMessage}</span>)}
+            {generalError && (<div className='w-[400px]' text-center text-sm text-red-500>{generalError}</div>)}
           </div>
             
         )
@@ -144,6 +145,7 @@ export function LoginForm({
             </div> : 'Entrar'}
         </button>
         </form>
+
     </div>
   )
 }
