@@ -75,11 +75,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Função de login
   async function login(email: string, password: string) {
+    if (!email.trim())
+      throw new FormValidationError('O e-mail é obrigatório.', 'email')
+    if (!password.trim())
+      throw new FormValidationError('A senha é obrigatória.', 'password')
 
-
-    if(!email.trim()) throw new FormValidationError("O e-mail é obrigatório.", "email")
-    if(!password.trim()) throw new FormValidationError("A senha é obrigatória.", "password")
-    
     let response: Response
 
     setLoading(true)
@@ -91,14 +91,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       })
     } catch {
       setLoading(false)
-      throw new FormValidationError("Não foi possível se conectar ao servidor de autenticação. Tente novamente mais tarde", undefined)
+      throw new FormValidationError(
+        'Não foi possível se conectar ao servidor de autenticação. Tente novamente mais tarde',
+        undefined
+      )
     }
 
     if (!response.ok) {
       let errorMsg: string
       try {
         const data = await response.json()
-        errorMsg = data.detail || "Erro inesperado"
+        errorMsg = data.detail || 'Erro inesperado'
       } catch {
         errorMsg = 'Erro inesperado'
         setLoading(false)
@@ -106,9 +109,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false)
       throw translateApiError(errorMsg)
     }
-    
+
     const data = await response.json()
-    
+
     const newUser = await me(data.access_token) // valida
     setUser(newUser)
     localStorage.setItem('user', JSON.stringify(newUser)) // grava no storage
@@ -117,16 +120,49 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Função de registro
   async function register(full_name: string, email: string, password: string) {
-    const res = await fetch(`${environments.backendUrl}/auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ full_name, email, password })
-    })
+    if (!email.trim())
+      throw new FormValidationError('O e-mail é obrigatório.', 'email')
+    if (!password.trim())
+      throw new FormValidationError('A senha é obrigatória.', 'password')
+    if (!full_name.trim())
+      throw new FormValidationError(
+        'O nome de usuário é obrigatório.',
+        'full_name'
+      )
 
-    if (!res.ok) throw new Error('Registration failed')
+    let response: Response
+
+    setLoading(true)
+
+    try {
+      response = await fetch(`${environments.backendUrl}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ full_name, email, password })
+      })
+    } catch {
+      setLoading(false)
+      throw new FormValidationError(
+        'Não foi possível se conectar ao servidor de autenticação. Tente novamente mais tarde',
+        undefined
+      )
+    }
+
+    if (!response.ok) {
+      let errorMsg: string
+      try {
+        const data = await response.json()
+        errorMsg = data.detail || 'Erro inesperado'
+      } catch {
+        errorMsg = 'Erro inesperado'
+      }
+      setLoading(false)
+      throw translateApiError(errorMsg)
+    }
 
     // depois de registrar, já loga
     await login(email, password)
+    setLoading(false)
   }
 
   // Logout
