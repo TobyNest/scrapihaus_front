@@ -3,6 +3,8 @@ import { createContext, useContext, useState, useEffect } from 'react'
 import { User } from '../types/user'
 import { environments } from '@/utils/env/enviroments'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { FormValidationError } from '../errors/FormValidationError'
+import { translateApiError } from '@/utils/errorMapping/translateApiError'
 
 type AuthContextType = {
   user: User | null
@@ -73,19 +75,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Função de login
   async function login(email: string, password: string) {
-    const res = await fetch(`${environments.backendUrl}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
-    })
 
-    if (!res.ok) throw new Error('Login failed')
 
-    const data = await res.json()
+    if(!email.trim()) throw new FormValidationError("O e-mail é obrigatório.", "email")
+    if(!password.trim()) throw new FormValidationError("A senha é obrigatória.", "password")
+    
+    let response: Response
 
+    setLoading(true)
+    try {
+      response = await fetch(`${environments.backendUrl}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      })
+    } catch {
+      setLoading(false)
+      throw new FormValidationError("Não foi possível se conectar ao servidor de autenticação. Tente novamente mais tarde", undefined)
+    }
+
+    if (!response.ok) {
+      let errorMsg: string
+      try {
+        const data = await response.json()
+        errorMsg = data.detail || "Erro inesperado"
+      } catch {
+        errorMsg = 'Erro inesperado'
+        setLoading(false)
+      }
+      setLoading(false)
+      throw translateApiError(errorMsg)
+    }
+    
+    const data = await response.json()
+    
     const newUser = await me(data.access_token) // valida
     setUser(newUser)
     localStorage.setItem('user', JSON.stringify(newUser)) // grava no storage
+    setLoading(false)
   }
 
   // Função de registro
