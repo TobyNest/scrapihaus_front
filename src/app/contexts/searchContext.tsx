@@ -22,7 +22,9 @@ type SearchController = {
   buscarHousings: (params: SearchParams, user: User | null) => Promise<void>
   fetchMySearches: (access_token: string) => Promise<void>
   isResultPage?: boolean
+  userQuotaReached: boolean
   setIsResultPage: React.Dispatch<React.SetStateAction<boolean>>
+  setUserQuotaReached: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const SearchContext = createContext<SearchController | undefined>(undefined)
@@ -32,15 +34,14 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
   const [searches, setSearches] = useState<HousingHistory[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [userQuotaReached, setUserQuotaReached] = useState<boolean>(false)
 
   const [isResultPage, setIsResultPage] = useState(false)
-
 
   const [searchParams, setSearchParams] = useState<SearchParams>({
     tipo: 'Casa' // valor padrão
   })
   const [selectedOption, setSelectedOption] = useState<number>(0)
-
 
   const updateField = <K extends keyof SearchParams>(
     key: K,
@@ -79,7 +80,6 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
 
       // Constrói a query string
       const query = new URLSearchParams()
-
       for (const [key, value] of Object.entries(filteredParams)) {
         if (key === 'bairros' && Array.isArray(value)) {
           value.forEach((bairro) => query.append('bairro', bairro))
@@ -99,13 +99,22 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
         }
       )
 
-      if (!response.ok) throw new Error('Erro ao realizar pesquisa')
+      if (!response.ok) {
+        // pega a mensagem real da API
+        let errorMsg = 'Erro ao realizar pesquisa'
+        try {
+          const data = await response.json()
+          errorMsg = data.detail || errorMsg
+        } catch {}
+        throw new Error(errorMsg)
+      }
 
       const data: Housing[] = await response.json()
       setHousings(data)
     } catch (err: any) {
       setError(err.message || 'Erro desconhecido')
       setHousings([])
+      throw err
     } finally {
       setLoading(false)
     }
@@ -118,26 +127,27 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
     try {
       const res = await fetch(`${environments.backendUrl}/my-searches`, {
         method: 'GET',
-        headers: access_token ? { Authorization: `Bearer ${access_token}` } : undefined
+        headers: access_token
+          ? { Authorization: `Bearer ${access_token}` }
+          : undefined
       })
 
       if (!res.ok) throw new Error('Erro ao buscar histórico')
 
       const data = await res.json()
 
-      const mapped: HousingHistory[] = data.map((item:any) => (
-        {
-          tipo: item.search_params.tipo,
-          quartos: item.search_params.quartos,
-          banheiros: item.search_params.banheiros,
-          vagas_garagem: item.search_params.vagas_garagem,
-          area_min: item.search_params.area_min,
-          area_max: item.search_params.area_max,
-          bairro: Array.isArray(item.search_params.bairro) ? item.search_params.bairro : [item.search_params.bairro],
-          data_pesquisa: new Date(item.timestamp)
-
-        }
-      ))
+      const mapped: HousingHistory[] = data.map((item: any) => ({
+        tipo: item.search_params.tipo,
+        quartos: item.search_params.quartos,
+        banheiros: item.search_params.banheiros,
+        vagas_garagem: item.search_params.vagas_garagem,
+        area_min: item.search_params.area_min,
+        area_max: item.search_params.area_max,
+        bairro: Array.isArray(item.search_params.bairro)
+          ? item.search_params.bairro
+          : [item.search_params.bairro],
+        data_pesquisa: new Date(item.timestamp)
+      }))
 
       setSearches(mapped)
     } catch (err: any) {
@@ -163,7 +173,9 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
         buscarHousings,
         fetchMySearches,
         isResultPage,
-        setIsResultPage
+        setIsResultPage,
+        setUserQuotaReached,
+        userQuotaReached
       }}
     >
       {children}

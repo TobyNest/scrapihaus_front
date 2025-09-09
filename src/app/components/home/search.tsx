@@ -11,6 +11,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import QuotaPopup from '../popUps/quotaPopUp'
 
 export default function SearchSection({
   variant = 'search',
@@ -26,102 +27,127 @@ export default function SearchSection({
     buscarHousings,
     searchParams,
     setIsResultPage,
-    loading
+    loading,
+    setUserQuotaReached,
+    userQuotaReached
   } = useSearch()
 
   const navigate = useNavigate()
   const { user } = useAuth()
+  const [quotaPopupOpen, setQuotaPopupOpen] = useState(false)
 
   if (!showPage && user) {
     return null
   }
 
-  return (
-    <div className="flex min-h-[240px] w-[712px] flex-col justify-between gap-[8px] font-roboto">
-      <div
-        className={` ${variant == 'search' ? 'border border-bg-light bg-bg-dark' : ''} flex min-h-[123px] w-full flex-col rounded-[4px] bg-bg bg-opacity-60 px-[24px] py-[16px] transition-colors duration-500`}
-      >
-        <div className="flex h-full w-full flex-col gap-[24px]">
-          <BairroTagSearch
-            setBairros={(bairros: string[] | undefined) =>
-              updateField(
-                'bairros',
-                bairros || undefined // passa undefined se estiver vazio
-              )
-            }
-          />
+  const handleSearchClick = async () => {
+    if (loading) return
 
-          <div className="flex h-[24px] w-full flex-row justify-between gap-[16px]">
-            <NumberSelector
-              value={searchParams.quartos}
-              parameter={'quartos'}
-              setValue={updateField.bind(null, 'quartos')}
+    if (userQuotaReached && !user) {
+      setQuotaPopupOpen(true)
+      return
+    }
+
+    try {
+      await buscarHousings(searchParams, user)
+      setIsResultPage(true)
+      navigate('/search')
+    } catch (err: any) {
+      const message = err?.message || ''
+      if (message.includes('Free request quota exceeded')) {
+        setUserQuotaReached(true)
+        setQuotaPopupOpen(true)
+      } else {
+        console.error('Erro ao buscar housings:', err)
+      }
+    }
+  }
+
+  return (
+    <>
+      <div className="flex min-h-[240px] w-[712px] flex-col justify-between gap-[8px] font-roboto">
+        <div
+          className={` ${variant == 'search' ? 'border border-bg-light bg-bg-dark' : ''} flex min-h-[123px] w-full flex-col rounded-[4px] bg-bg bg-opacity-60 px-[24px] py-[16px] transition-colors duration-500`}
+        >
+          <div className="flex h-full w-full flex-col gap-[24px]">
+            <BairroTagSearch
+              setBairros={(bairros: string[] | undefined) =>
+                updateField('bairros', bairros || undefined)
+              }
             />
-            <NumberSelector
-              value={searchParams.banheiros}
-              parameter={'banheiros'}
-              setValue={updateField.bind(null, 'banheiros')}
-            />
-            <NumberSelector
-              value={searchParams.vagas_garagem}
-              parameter={'vagas_garagem'}
-              setValue={updateField.bind(null, 'vagas_garagem')}
-            />
+            <div className="flex h-[24px] w-full flex-row justify-between gap-[16px]">
+              <NumberSelector
+                value={searchParams.quartos}
+                parameter={'quartos'}
+                setValue={updateField.bind(null, 'quartos')}
+              />
+              <NumberSelector
+                value={searchParams.banheiros}
+                parameter={'banheiros'}
+                setValue={updateField.bind(null, 'banheiros')}
+              />
+              <NumberSelector
+                value={searchParams.vagas_garagem}
+                parameter={'vagas_garagem'}
+                setValue={updateField.bind(null, 'vagas_garagem')}
+              />
+            </div>
           </div>
         </div>
+        <div
+          className={` ${variant == 'search' ? 'border border-bg-light bg-bg-dark' : ''} h-[52px] w-full rounded-[4px] bg-bg bg-opacity-60 px-[16px] py-[8px] transition-colors duration-500`}
+        >
+          <AreaAndTypeSelector
+            minAreaValue={searchParams.area_min}
+            setMinArea={updateField.bind(null, 'area_min')}
+            maxAreaValue={searchParams.area_max}
+            setMaxArea={updateField.bind(null, 'area_max')}
+            setSelectedOption={handleTypeChange}
+            selectedOption={selectedOption}
+          />
+        </div>
+        <div
+          onClick={handleSearchClick}
+          className={`flex h-[40px] w-full items-center justify-center rounded-[4px] font-roboto text-sm font-medium text-white transition-all duration-150 ease-in-out ${
+            loading
+              ? 'bg-border-dark cursor-not-allowed opacity-80'
+              : 'hover:bg-border-dark bg-border hover:cursor-pointer'
+          }`}
+        >
+          {loading ? (
+            <svg
+              className="h-5 w-5 animate-spin text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              />
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+              />
+            </svg>
+          ) : (
+            'PESQUISAR'
+          )}
+        </div>
       </div>
-      <div
-        className={` ${variant == 'search' ? 'border border-bg-light bg-bg-dark' : ''} h-[52px] w-full rounded-[4px] bg-bg bg-opacity-60 px-[16px] py-[8px] transition-colors duration-500`}
-      >
-        <AreaAndTypeSelector
-          minAreaValue={searchParams.area_min}
-          setMinArea={updateField.bind(null, 'area_min')}
-          maxAreaValue={searchParams.area_max}
-          setMaxArea={updateField.bind(null, 'area_max')}
-          setSelectedOption={handleTypeChange}
-          selectedOption={selectedOption}
-        />
-      </div>
-      <div
-        onClick={async () => {
-          if (loading) return 
-          try {
-             await buscarHousings(searchParams, user)
-          } catch {
-            
-          }
-         
-          setIsResultPage(true)
-          navigate('/search')
-        }}
-        className={`flex h-[40px] w-full items-center justify-center rounded-[4px] font-roboto text-sm font-medium text-white transition-all duration-150 ease-in-out ${loading ? 'bg-border-dark cursor-not-allowed opacity-80' : 'hover:bg-border-dark bg-border hover:cursor-pointer'}`}
-      >
-        {loading ? (
-          <svg
-            className="h-5 w-5 animate-spin text-white"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            />
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-            />
-          </svg>
-        ) : (
-          'PESQUISAR'
-        )}
-      </div>
-    </div>
+
+      {/* Popup de limite de requisições */}
+      <QuotaPopup
+        isOpen={quotaPopupOpen}
+        onClose={() => setQuotaPopupOpen(false)}
+        onRegister={() => navigate('/register')}
+      />
+    </>
   )
 }
 
