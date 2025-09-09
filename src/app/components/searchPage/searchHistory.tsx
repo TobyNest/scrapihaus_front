@@ -111,21 +111,22 @@ export function HistoryCard({ info }: { info: HousingHistory }) {
         </div>
         <div className="h-[56px] w-full rounded-[4px] border border-bg-light p-[8px] transition-all duration-500 ease-in-out group-hover:h-[192px]">
           <div className="flex w-full flex-row gap-[8px]">
-            <div className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-border">
+            <div className="flex h-[32px] w-[32px] flex-shrink-0 items-center justify-center rounded-full bg-border">
               <FontAwesomeIcon
                 icon={faBuilding}
                 className="text-[16px] text-white"
               />
             </div>
-            <div className="flex h-[32px] flex-col gap-[1px]">
-              <h1 className="text-[14px] font-bold text-text">{info.tipo}</h1>
-              <div className="flex flex-row text-[12px] text-text-muted">
+            <div className="flex h-[32px] min-w-0 flex-1 flex-col gap-[1px]">
+              <h1 className="text-[12px] font-bold text-text">{info.tipo}</h1>
+              <div className="flex w-full items-center overflow-hidden text-[12px] text-text-muted">
                 {info.bairro && info.bairro.length > 0 && (
                   <>
-                    <span>{info.bairro[0]}</span>
-                    {info.bairro.length > 1 && <span>, {info.bairro[1]}</span>}
+                    <span className="truncate">
+                      {info.bairro.slice(0, 2).join(', ')}
+                    </span>
                     {info.bairro.length > 2 && (
-                      <span className="ml-[4px] rounded-full bg-text-muted px-[4px] font-bold text-bg-dark">
+                      <span className="ml-[4px] flex-shrink-0 rounded-full bg-text-muted px-[4px] font-bold text-bg-dark">
                         +{info.bairro.length - 2}
                       </span>
                     )}
