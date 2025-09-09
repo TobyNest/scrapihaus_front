@@ -146,6 +146,7 @@ export default function SearchSection({
         isOpen={quotaPopupOpen}
         onClose={() => setQuotaPopupOpen(false)}
         onRegister={() => navigate('/register')}
+        onLogin={() => navigate('/login')}
       />
     </>
   )
